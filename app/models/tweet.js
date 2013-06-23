@@ -1,4 +1,17 @@
 
+// time
+// text snippets
+// source (where from)
+// reply/ not a reply
+// most replied to (by user id)
+// top tweeters (users)
+// where (geo, coordinates), and unknown
+// favorited
+// retweeted
+// language
+// average number of followers
+// average verified vs unverified
+
 /**
  * Module dependencies.
  */
@@ -37,23 +50,12 @@ var setDate = function(date) {
 /**
  * Tweet Schema
  */
-
 var TweetSchema = new Schema({
-  user: { type : Schema.ObjectId, ref : 'User' },
-  keywords: { type : Array, ref : 'User' },
+  // user: { type : Schema.ObjectId, ref : 'User' },
+  // keywords: { type : Array, ref : 'User' },
+  created_at: String,
   id: Number,
   id_str: String,
-  name: String,
-  screen_name: String,
-  location: String,
-  url: String,
-  description: String,
-  protected: Boolean,
-  followers_count: Number,
-  friends_count: Number,
-  listed_count: Number,
-  created_at: String,
-  favourites_count: Number,
   text: String,
   source: String,
   truncated: Boolean,
@@ -62,7 +64,27 @@ var TweetSchema = new Schema({
   in_reply_to_user_id: Number,
   in_reply_to_user_id_str: String,
   in_reply_to_screen_name: String,
-  twitter_user: {
+  coordinates: String,
+  place: String,
+  contributors: String,
+  retweet_count: Number,
+  favorite_count: Number,
+  favorited: Boolean,
+  retweeted: Boolean,
+  lang: String,
+  geo: String,
+  user: {
+    id: Number,
+    id_str: String,
+    name: String,
+    screen_name: String,
+    location: String,
+    description: String,
+    url: String,
+    followers_count: Number,
+    friends_count: Number,
+    created_at: String,
+    favourites_count: Number,
     utc_offset: Number,
     time_zone: String,
     geo_enabled: Boolean,
@@ -84,44 +106,19 @@ var TweetSchema = new Schema({
     profile_text_color: String,
     profile_use_background_image: Boolean,
     default_profile: Boolean,
-    default_profile_image: Boolean,
-    following: String,
-    follow_request_sent: String,
-    notifications: String,
-    profile_banner_url_https: String,
-    profile_image_url: String,
-  },
-  geo: String,
-  coordinates: String,
-  place: String,
-  contributors: String,
-  retweet_count: Number,
-  favorite_count: Number,
-  entities: {
-    hashtags: Array,
-    symbols: Array,
-    urls: Array,
-    user_mentions: Object,
-    media: Object,
-  },
-  favorited: Boolean,
-  retweeted: Boolean,
-  possibly_sensitive: Boolean,
-  filter_level: String,
-  lang: String
+    deafult_profile_image: Boolean,
+    notifications: Boolean
+  }
 })
+
 
 /**
  * Validations
  */
-
-TweetSchema.path('name').validate(function (title) {
-  return title.length > 0
-}, 'Tweet title cannot be blank')
-
-TweetSchema.path('text').validate(function (body) {
-  return body.length > 0
-}, 'Tweet body cannot be blank')
+// 
+// TweetSchema.path('description').validate(function (data) {
+//   return data.description.length > 0
+// }, 'Tweet description cannot be blank')
 
 /**
  * Pre-remove hook
@@ -152,10 +149,6 @@ TweetSchema.methods = {
    * @param {Function} cb
    * @api private
    */
-  
-  save: function(cb) {
-    return this.save;
-  },
   
   /**
    * Save tweet and upload image
