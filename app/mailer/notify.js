@@ -23,21 +23,22 @@ var Notify = {
    */
 
   comment: function (options, cb) {
-    var article = options.article
-    var author = article.user
+    var tweet = options.tweet
+    //needs fixing after tweet model is set in stone :VE //
+    var author = tweet.user
     var user = options.currentUser
     var notifier = new Notifier(config.notifier)
 
     var obj = {
       to: author.email,
       from: 'your@product.com',
-      subject: user.name + ' added a comment on your article ' + article.title,
+      subject: user.name + ' added a comment on your article ' + tweet.title,
       alert: user.name + ' says: "' + options.comment,
       locals: {
         to: author.name,
         from: user.name,
         body: options.comment,
-        article: article.name
+        tweet: tweet.name
       }
     }
 

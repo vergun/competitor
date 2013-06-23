@@ -10,89 +10,60 @@ var async = require('async')
  */
 
 var users = require('../app/controllers/users')
-  , articles = require('../app/controllers/articles')
+  , tweets = require('../app/controllers/tweets')
   , auth = require('./middlewares/authorization')
 
 /**
  * Route middlewares
  */
 
-var articleAuth = [auth.requiresLogin, auth.article.hasAuthorization]
+var tweetAuth = [auth.requiresLogin, auth.tweet.hasAuthorization]
 
 /**
  * Expose routes
  */
 
 module.exports = function (app, passport) {
+  
+  // home route
+  app.get('/', tweets.index)
 
   // user routes
   app.get('/login', users.login)
   app.get('/signup', users.signup)
   app.get('/logout', users.logout)
   app.post('/users', users.create)
+  app.post('/users/:userId/update', users.update)
   app.post('/users/session',
     passport.authenticate('local', {
-      failureRedirect: '/login',
+      failureRedirect: '/',
       failureFlash: 'Invalid email or password.'
     }), users.session)
   app.get('/users/:userId', users.show)
-  app.get('/auth/facebook',
-    passport.authenticate('facebook', {
-      scope: [ 'email', 'user_about_me'],
-      failureRedirect: '/login'
-    }), users.signin)
-  app.get('/auth/facebook/callback',
-    passport.authenticate('facebook', {
-      failureRedirect: '/login'
-    }), users.authCallback)
-  app.get('/auth/github',
-    passport.authenticate('github', {
-      failureRedirect: '/login'
-    }), users.signin)
-  app.get('/auth/github/callback',
-    passport.authenticate('github', {
-      failureRedirect: '/login'
-    }), users.authCallback)
-  app.get('/auth/twitter',
-    passport.authenticate('twitter', {
-      failureRedirect: '/login'
-    }), users.signin)
-  app.get('/auth/twitter/callback',
-    passport.authenticate('twitter', {
-      failureRedirect: '/login'
-    }), users.authCallback)
-  app.get('/auth/google',
-    passport.authenticate('google', {
-      failureRedirect: '/login',
-      scope: [
-        'https://www.googleapis.com/auth/userinfo.profile',
-        'https://www.googleapis.com/auth/userinfo.email'
-      ]
-    }), users.signin)
-  app.get('/auth/google/callback',
-    passport.authenticate('google', {
-      failureRedirect: '/login'
-    }), users.authCallback)
+  app.get('/users/:userId/edit', users.edit)
 
   app.param('userId', users.user)
 
-  // article routes
-  app.get('/articles', articles.index)
-  app.get('/articles/new', auth.requiresLogin, articles.new)
-  app.post('/articles', auth.requiresLogin, articles.create)
-  app.get('/articles/:id', articles.show)
-  app.get('/articles/:id/edit', articleAuth, articles.edit)
-  app.put('/articles/:id', articleAuth, articles.update)
-  app.del('/articles/:id', articleAuth, articles.destroy)
+  // tweet routes
+  app.get('/tweets', tweets.index)
+  app.get('/tweets/new', auth.requiresLogin, tweets.new)
+  app.post('/tweets', auth.requiresLogin, tweets.create)
+  app.get('/tweets/:id', tweets.show)
+  app.get('/tweets/:id/edit', tweetAuth, tweets.edit)
+  app.put('/tweets/:id', tweetAuth, tweets.update)
+  app.del('/tweets/:id', tweetAuth, tweets.destroy)
 
-  app.param('id', articles.load)
-
-  // home route
-  app.get('/', articles.index)
-
+  app.param('id', tweets.load)
+  
+  // explore route
+  app.get('/activity', users.activity)
+  
+  // activity route
+  app.get('/explore', tweets.explore)
+  
   // comment routes
   var comments = require('../app/controllers/comments')
-  app.post('/articles/:id/comments', auth.requiresLogin, comments.create)
+  app.post('/tweets/:id/comments', auth.requiresLogin, comments.create)
 
   // tag routes
   var tags = require('../app/controllers/tags')

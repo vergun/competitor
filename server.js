@@ -1,17 +1,12 @@
-
-/*!
- * nodejs-express-mongoose-demo
- * Copyright(c) 2013 Madhusudhan Srinivasa <madhums8@gmail.com>
- * MIT Licensed
- */
-
 /**
  * Module dependencies.
  */
 
 var express = require('express')
+  , http = require('http')
   , fs = require('fs')
   , passport = require('passport')
+  , twitter = require('ntwitter')
 
 /**
  * Main application entry file.
@@ -37,6 +32,8 @@ fs.readdirSync(models_path).forEach(function (file) {
 require('./config/passport')(passport, config)
 
 var app = express()
+  , server = http.createServer(app)
+  
 // express settings
 require('./config/express')(app, config, passport)
 
@@ -45,8 +42,12 @@ require('./config/routes')(app, passport)
 
 // Start the app by listening on <port>
 var port = process.env.PORT || 3000
-app.listen(port)
+server.listen(port)
 console.log('Express app started on port '+port)
+
+// Start twitter engine
+require('./app/modules/server_connections')(server);
 
 // expose app
 exports = module.exports = app
+

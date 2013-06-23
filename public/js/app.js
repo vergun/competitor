@@ -1,4 +1,4 @@
-$(document).ready(function () {
+jQuery.ready(function ($) {
 
   // confirmations
   $('.confirm').submit(function (e) {

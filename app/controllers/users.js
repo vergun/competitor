@@ -1,4 +1,3 @@
-
 /**
  * Module dependencies.
  */
@@ -6,6 +5,18 @@
 var mongoose = require('mongoose')
   , User = mongoose.model('User')
   , utils = require('../../lib/utils')
+  , _ = require('underscore')
+  
+  
+/**
+ * Show activity page
+ */
+
+exports.activity = function(req, res){
+  res.render('users/activity', {
+    title: "Activity"
+  })
+}
 
 exports.signin = function (req, res) {}
 
@@ -22,7 +33,7 @@ exports.authCallback = function (req, res, next) {
  */
 
 exports.login = function (req, res) {
-  res.render('users/login', {
+  res.render('/', {
     title: 'Login',
     message: req.flash('error')
   })
@@ -33,7 +44,7 @@ exports.login = function (req, res) {
  */
 
 exports.signup = function (req, res) {
-  res.render('users/signup', {
+  res.render('/', {
     title: 'Sign up',
     user: new User()
   })
@@ -45,7 +56,7 @@ exports.signup = function (req, res) {
 
 exports.logout = function (req, res) {
   req.logout()
-  res.redirect('/login')
+  res.redirect('/')
 }
 
 /**
@@ -65,7 +76,7 @@ exports.create = function (req, res) {
   user.provider = 'local'
   user.save(function (err) {
     if (err) {
-      return res.render('users/signup', {
+      return res.render('/', {
         errors: utils.errors(err.errors),
         user: user,
         title: 'Sign up'
@@ -75,6 +86,8 @@ exports.create = function (req, res) {
     // manually login the user once successfully signed up
     req.logIn(user, function(err) {
       if (err) return next(err)
+      // get tweets (before login? if new)
+      
       return res.redirect('/')
     })
   })
@@ -93,8 +106,41 @@ exports.show = function (req, res) {
 }
 
 /**
- * Find user by id
+ *  Edit profile
  */
+
+exports.edit = function (req, res) {
+  var user = req.profile
+  res.render('users/edit', {
+    title: "Edit " + user.name,
+    user: user
+  })
+}
+
+/**
+ *  Update profile
+ */
+
+exports.update = function(req, res){
+  var user = req.user
+    , user = _.extend(user, req.body)
+  user.save(function (err, cb) {
+    if (!err) {
+      res.render('users/show', {
+        title: user.name,
+        message: 'User was successfully updated.',
+        user: user
+      })
+    }
+    if (err) {
+      res.render('users/edit', {
+        title: 'Edit ' + req.user.username,
+        user: req.user,
+        errors: err
+      })
+    } 
+  })
+}
 
 exports.user = function (req, res, next, id) {
   User

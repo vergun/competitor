@@ -21,3 +21,12 @@ body {
   background: #fff;
   border: 0;
 }
+
+ul.analytics { width: 75% }
+ul.analytics li { display: block; width: 0; background: blue; color: black}
+ul.analytics li span.number { color: white }
+ul.analytics li span:not(.number) { float: right; display: inline-block; background: blue; color: #fff }
+ul.tweets { list-style-type: none } 
+ul.tweets li { background: #efefef; }
+ul.tweets li:nth-child(odd) { background: #fff; }
+p.offset2.message {color:green;}

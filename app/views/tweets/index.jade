@@ -1,0 +1,26 @@
+each tweet in tweets
+  .tweet
+    h3
+      a(href='/tweets/'+tweet._id, title=tweet.title) #{tweet.title}
+    p= article.body
+
+    .meta.muted
+      span= formatDate(tweet.createdAt)
+      &nbsp; - &nbsp;
+      span Tweet &nbsp;
+
+      - var name = tweet.user.name ? tweet.user.name : tweet.user.username
+
+      a(href="/users/"+tweet.user._id)= name
+      &nbsp; - &nbsp;
+      - if (tweet.tags)
+        - each tag in tweet.tags.split(',')
+          &nbsp;
+          a.tag(href="/tags/"+tag)
+            i.icon-tags
+            |  #{tag}
+
+- if (pages > 1)
+  .pagination
+    ul
+      != createPagination(pages, page)

@@ -1,6 +1,6 @@
 {
-  "name": "nodejs-express-mongoose-demo",
-  "description": "A demo app illustrating the usage of express framework, mongoose orm, mongodb and stylus in node.js. The also illustrates how to properly organize your application",
+  "name": "competition-tacker",
+  "description": "Track your competition on Twitter",
   "keywords": [
     "express",
     "mongoose",
@@ -8,9 +8,9 @@
     "passport",
     "demo"
   ],
-  "version": "3.0.0",
+  "version": "0.0.4",
   "private": false,
-  "author": "Madhusudhan Srinivasa <madhums8@gmail.com> (http://madhums.github.com)",
+  "author": "Instore <contact@instoredoes.com>",
   "engines": {
     "node": "0.10.x",
     "npm":  "1.2.x"
@@ -27,17 +27,15 @@
     "connect-flash": "latest",
     "passport": "latest",
     "passport-local": "latest",
-    "passport-facebook": "latest",
-    "passport-twitter": "latest",
-    "passport-github": "latest",
-    "passport-google-oauth": "latest",
     "imager": "latest",
     "notifier": "latest",
     "underscore": "latest",
     "gzippo": "latest",
     "async": "latest",
     "view-helpers": "latest",
-    "forever": "latest"
+    "forever": "latest",
+    "ntwitter": "0.5.0",
+    "socket.io": "latest"
   },
   "devDependencies": {
     "supertest": "latest",

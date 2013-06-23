@@ -1,5 +1,10 @@
 extends ../layouts/default
 
 block main
-  - var name = user.name ? user.name : user.username
-  h1= name
+block content
+  h1=user.name
+  h2=user.email
+  h2=user.username
+  h2=user.competitors
+  p.offset2.message=message
+  a(href="/users/"+req.user.id + "/edit", title="Edit Profile") Edit Profile

@@ -4,7 +4,7 @@
  */
 
 var mongoose = require('mongoose')
-  , Article = mongoose.model('Article')
+  , Tweet = mongoose.model('Tweet')
 
 /**
  * List items tagged with a tag
@@ -20,12 +20,12 @@ exports.index = function (req, res) {
     criteria: criteria
   }
 
-  Article.list(options, function(err, articles) {
+  Tweet.list(options, function(err, tweets) {
     if (err) return res.render('500')
-    Article.count(criteria).exec(function (err, count) {
-      res.render('articles/index', {
-        title: 'Articles tagged ' + req.param('tag'),
-        articles: articles,
+    Tweet.count(criteria).exec(function (err, count) {
+      res.render('tweets/index', {
+        title: 'Tweet tagged ' + req.param('tag'),
+        tweets: tweets,
         page: page,
         pages: count / perPage
       })

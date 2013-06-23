@@ -1,11 +1,9 @@
-extends auth
-
-block auth
+.login
   form.offset1.login.form-horizontal(action="/users/session", method="post")
     input(type='hidden', name='_csrf', value="#{csrf_token}")
 
     p.offset2.error= message
-
+                  
     .control-group
       label.control-label(for='email') Email
       .controls
@@ -18,6 +16,3 @@ block auth
 
     .form-actions
       button.btn.btn-primary(type='submit') Login
-      &nbsp;
-      | or&nbsp;
-      a.show-signup(href="/signup") sign up
