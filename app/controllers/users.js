@@ -6,6 +6,10 @@ var mongoose = require('mongoose')
   , User = mongoose.model('User')
   , utils = require('../../lib/utils')
   , _ = require('underscore')
+  , env = process.env.NODE_ENV || 'development'  
+  , config = require('../../config/config')[env]
+  , twitter = require('ntwitter')
+  , twit = new twitter(config.twitter) // creating new Twitter here & server.js // todo
   
   
 /**
@@ -13,7 +17,7 @@ var mongoose = require('mongoose')
  */
 
 exports.activity = function(req, res){
-  var user = req.profile
+  var user = req.user
   res.render('users/activity', {
     title: "Activity",
     user: user
@@ -72,21 +76,18 @@ exports.create = function (req, res) {
   var user = new User(req.body)
   user.provider = 'local'
   user.save(function (err) {
-    if (err) {
-      return res.render('/', {
-        errors: utils.errors(err.errors),
-        user: user,
-        title: 'Sign up'
-      })
-    }
-
-    // manually login the user once successfully signed up
-    req.logIn(user, function(err) {
-      if (err) return next(err)
-      // get tweets (before login? if new)
-      
+    if (err) { 
+      // pass errors in todo // 
       return res.redirect('/')
-    })
+    }
+    // Fetch tweets //
+    var fetchTweets = require('../modules/tweets_helper')(twit, user.keywords, user, function() {
+      // manually login the user once successfully signed up
+      req.logIn(user, function(err) {
+        if (err) return next(err)
+        return res.redirect('/')
+      })
+    });
   })
 }
 

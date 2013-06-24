@@ -15,9 +15,10 @@ var mongoose = require('mongoose')
  */
   
 var TweetSchema = new Schema({
-  // user: { type : Schema.ObjectId, ref : 'User' },
-  // keywords: { type : Array, ref : 'User' },
-  created_at: String,
+  user_id: {type : Schema.ObjectId, ref : 'User'},
+  keywords: Array,
+  request_date: Date,
+  created_at: Date,
   id: Number,
   id_str: String,
   text: String,
@@ -81,7 +82,10 @@ var TweetSchema = new Schema({
 
 TweetSchema.pre('save', function(next) {
   //set language from language 639-1 code
-  this.lang = langs[this.lang].name
+  if (langs[this.lang].name) this.lang = langs[this.lang].name
+  if (!langs[this.lang].name) console.log(this.lang + " NOT FOUND!!!!!!!!") //todo remove
+  this.created_at = new Date(this.created_at)
+  this.request_date = new Date()
   return next()
 })
 

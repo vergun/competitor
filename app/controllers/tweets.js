@@ -1,24 +1,3 @@
-
-
-// var db = require('./mongoconnection');
-// var modules = require('./modules.js');
-// var tweets = db.collection('tweets');
-// 
-// exports.addTweet = function(tweet, keyword, callback) 
-// {
-//   tweets.findOne({id: tweet.id}, function(e, o) {
-//     if (o){
-//       callback('tweet already exists');
-//     } else {
-//       newTweet = tweet;
-//       newTweet.keyword = keyword;
-//       newTweet.date = modules.moment().format('MMMM Do YYYY, h:mm:ss a');
-//       tweets.insert(newTweet, {safe: true}, callback); 
-//     }
-//   });
-// }
-
-
 /**
  * Module dependencies.
  */
@@ -28,6 +7,7 @@ var mongoose = require('mongoose')
   , utils = require('../../lib/utils')
   , _ = require('underscore')
   , User = mongoose.model('User')
+  , moment = require('moment')
 
 /**
  * Load
@@ -48,15 +28,23 @@ exports.load = function(req, res, next, id){
 
 exports.index = function(req, res){
   if (req.isAuthenticated()) {
+    var user = req.user
     Tweet.find({}, function(err, tws) {
       if (err) return err
       if (!err) {
+        
+
+        // _(tws).each(function(tw) { var d = tw.created_at.toString(); console.log(moment().format(d)) })
+          
+        var arrayOfTweetsSource = _.map(_(tws).countBy('source'), function (value, key) { return [key, value] });
+        var arrayOfTweetsLanguage = _.map(_(tws).countBy('lang'), function (value, key) { return [key, value] });
+        
         res.render('index', {
           tweets: tws,
-          lang: _.countBy(_.pluck(tws, 'lang'), function(tw) { return tw }),
-          source: _.countBy(_.pluck(tws, 'source'), function(tw) { return tw }),
-          verified: _.countBy(_.pluck(tws, function(t) { return t.verified}), function(tw) { return tw }),
-          recent: _.sortBy(tws, 'id'),
+          lang: _.sortBy(arrayOfTweetsLanguage, function (t) { return t[1] }).reverse(),
+          source: _.sortBy(arrayOfTweetsSource, function (t) { return t[1] }).reverse(),
+          recent: _.sortBy(tws, 'id').reverse(),
+          user: user
         })
       }
     })
@@ -151,7 +139,7 @@ exports.destroy = function(req, res){
 
 
 exports.explore = function(req, res){
-  var user = req.profile
+  var user = req.user
   res.render('tweets/explore', {
     title: "Explore",
     user: user

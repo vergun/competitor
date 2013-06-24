@@ -7,7 +7,7 @@ var defaults = {
   ,  socket = io.connect();
   
   jQuery(function($) {
-    var tweetList = $('ul.tweets')
+    var tweetList = $('ul.tweets.streaming')
       , analytics = $('ul.analytics')
       , tweet = {
       prependTweet: function(data) {

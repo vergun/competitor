@@ -15,16 +15,16 @@ var mongoose = require('mongoose')
    * Getters
    */
 
-  var getCompetitors = function (competitors) {
-    return competitors.join(',')
+  var getKeywords = function (keywords) {
+    return keywords.join(',')
   }
 
   /**
    * Setters
    */
 
-  var setCompetitors = function (competitors) {
-    return competitors.split(',')
+  var setKeywords = function (keywords) {
+    return keywords.split(',')
   }
 
 /**
@@ -35,7 +35,7 @@ var UserSchema = new Schema({
   name: String,
   email: String,
   username: String,
-  competitors: {type: [], get: getCompetitors, set: setCompetitors},
+  keywords: {type: [], get: getKeywords, set: setKeywords},
   plan: String,
   provider: String,
   hashed_password: String,
@@ -80,8 +80,8 @@ UserSchema.path('email').validate(function (email) {
   return email.length
 }, 'Email cannot be blank')
 
-UserSchema.path('competitors').validate(function (competitors) {
-  return competitors.length
+UserSchema.path('keywords').validate(function (keywords) {
+  return keywords.length
 }, 'Competitors cannot be blank')
 
 UserSchema.path('email').validate(function (email, fn) {

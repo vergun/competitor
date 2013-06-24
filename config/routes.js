@@ -56,11 +56,11 @@ module.exports = function (app, passport) {
   app.param('id', tweets.load)
   
   // activity route
-  app.get('/activity/:userId', auth.requiresLogin, users.activity)
+  app.get('/activity', auth.requiresLogin, users.activity)
   
   // explore route
-  app.get('/explore/:userId', auth.requiresLogin, tweets.explore)
+  app.get('/explore', auth.requiresLogin, tweets.explore)
   //
-	app.get('*', function(req, res) { res.render('404', { title: 'Page Not Found'}); }); 
+	app.get('*', function(req, res) { res.render('404', { title: 'Page Not Found'}); });  // not functional
 
 }

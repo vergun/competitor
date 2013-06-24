@@ -1,22 +1,23 @@
 hr
-h1= tweets.length + " Tweets"
-h1 Sorted by language
+h1= tweets.length + " Total"
+hr
 
-each count, val in lang
-  h2= val + ": " + count + " : " + (Math.round((count/tweets.length)*100)).toString() + "%"
-  
 h1 Most recent tweet
-h2= recent[0].created_at
-h3= recent[0].text
-h3= recent[0].name
-h3= recent[0].screen_name
-h3= recent[0].friends_count
+p=recent[0].created_at
+p
+  img(src=recent[0].user.profile_image_url)
+p=recent[0].user.name
+p=recent[0].text
 
-h1 Verified or unverified
-each section, val in verified
-  h2= val + ": " + verified.length
+p=recent[0].user.friends_count + " Friends"
 
-h1 Tweets by source
-each count, val in source
-  - var html = val.charAt(0).toUpperCase() + val.slice(1) + ": " + count + " : " + (Math.round((count/tweets.length)*100)).toString() + "%"
-  | !{html}
+h1 Tweets by language
+ul.tweets
+  each val in lang
+    li= val[0] + ": " + val[1] + " : " + (Math.round((val[1]/tweets.length)*100)).toString() + "%"
+
+h2 Tweets by source
+ul.tweets
+  each val in source
+    - var html = "<li>" + val[0].charAt(0).toUpperCase() + val[0].slice(1) + ": " + val[1] + " : " + (Math.round((val[1]/tweets.length)*100)).toString() + "%" + "</li>"
+    | !{html}

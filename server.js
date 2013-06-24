@@ -2,22 +2,24 @@
  * Module dependencies.
  */
 
-var express = require('express')
-  , http = require('http')
-  , fs = require('fs')
-  , passport = require('passport')
-  , twitter = require('ntwitter')
-
 /**
  * Main application entry file.
  * Please note that the order of loading is important.
  */
 
-// Load configurations
-// if test env, load example file
-var env = process.env.NODE_ENV || 'development'
+
+var express = require('express')
+  , http = require('http')
+  , fs = require('fs')
+  , passport = require('passport')
+  , env = process.env.NODE_ENV || 'development'  
   , config = require('./config/config')[env]
-  , mongoose = require('mongoose')
+  , twitter = require('ntwitter')
+  , twit = new twitter(config.twitter)
+  , mongoose = require('mongoose');
+  // Load configurations
+  // if test env, load example file
+  
 
 // Bootstrap db connection
 mongoose.connect(config.db)
@@ -45,9 +47,11 @@ var port = process.env.PORT || 3000
 server.listen(port)
 console.log('Express app started on port '+port)
 
-// Start server connections
-require('./app/modules/server_connections')(server);
+// Start socket.io //
+var io = require('socket.io').listen(server);
+
+// Start Twitter stream engine //
+require('./app/modules/server_connections')(twit, config, io);
 
 // expose app
 exports = module.exports = app
-
