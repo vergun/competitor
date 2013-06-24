@@ -13,10 +13,13 @@ var mongoose = require('mongoose')
  */
 
 exports.activity = function(req, res){
+  var user = req.profile
   res.render('users/activity', {
-    title: "Activity"
+    title: "Activity",
+    user: user
   })
 }
+
 
 exports.signin = function (req, res) {}
 
@@ -33,10 +36,7 @@ exports.authCallback = function (req, res, next) {
  */
 
 exports.login = function (req, res) {
-  res.render('/', {
-    title: 'Login',
-    message: req.flash('error')
-  })
+  res.redirect('/')
 }
 
 /**
@@ -44,17 +44,14 @@ exports.login = function (req, res) {
  */
 
 exports.signup = function (req, res) {
-  res.render('/', {
-    title: 'Sign up',
-    user: new User()
-  })
+  res.redirect('/')
 }
 
 /**
  * Logout
  */
 
-exports.logout = function (req, res) {
+exports.logout =  function (req, res) {
   req.logout()
   res.redirect('/')
 }

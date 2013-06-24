@@ -1,26 +1,22 @@
-each tweet in tweets
-  .tweet
-    h3
-      a(href='/tweets/'+tweet._id, title=tweet.title) #{tweet.title}
-    p= article.body
+hr
+h1= tweets.length + " Tweets"
+h1 Sorted by language
 
-    .meta.muted
-      span= formatDate(tweet.createdAt)
-      &nbsp; - &nbsp;
-      span Tweet &nbsp;
+each count, val in lang
+  h2= val + ": " + count + " : " + (Math.round((count/tweets.length)*100)).toString() + "%"
+  
+h1 Most recent tweet
+h2= recent[0].created_at
+h3= recent[0].text
+h3= recent[0].name
+h3= recent[0].screen_name
+h3= recent[0].friends_count
 
-      - var name = tweet.user.name ? tweet.user.name : tweet.user.username
+h1 Verified or unverified
+each section, val in verified
+  h2= val + ": " + verified.length
 
-      a(href="/users/"+tweet.user._id)= name
-      &nbsp; - &nbsp;
-      - if (tweet.tags)
-        - each tag in tweet.tags.split(',')
-          &nbsp;
-          a.tag(href="/tags/"+tag)
-            i.icon-tags
-            |  #{tag}
-
-- if (pages > 1)
-  .pagination
-    ul
-      != createPagination(pages, page)
+h1 Tweets by source
+each count, val in source
+  - var html = val.charAt(0).toUpperCase() + val.slice(1) + ": " + count + " : " + (Math.round((count/tweets.length)*100)).toString() + "%"
+  | !{html}

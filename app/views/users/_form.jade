@@ -1,5 +1,5 @@
 - var action = '/users'
-- action += user.isNew? '' : '/' + user.id + '/edit'
+- action += user.isNew? '' : '/' + user.id + '/update'
 
 form.offset1.form-horizontal(action=action, method="post")
   input(type='hidden', name='_csrf', value="#{csrf_token}")

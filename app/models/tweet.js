@@ -1,17 +1,3 @@
-
-// time
-// text snippets
-// source (where from)
-// reply/ not a reply
-// most replied to (by user id)
-// top tweeters (users)
-// where (geo, coordinates), and unknown
-// favorited
-// retweeted
-// language
-// average number of followers
-// average verified vs unverified
-
 /**
  * Module dependencies.
  */
@@ -21,35 +7,13 @@ var mongoose = require('mongoose')
   , env = process.env.NODE_ENV || 'development'
   , config = require('../../config/config')[env]
   , imagerConfig = require(config.root + '/config/imager.js')
+  , langs = require('../../lib/langs')
   , Schema = mongoose.Schema
-
-/**
- * Getters
- */
-
-var getTags = function (tags) {
-  return tags.join(',')
-}
-
-var getDate = function(date) {
-  // convert Date class to string date
-}
-
-/**
- * Setters
- */
-
-var setTags = function (tags) {
-  return tags.split(',')
-}
-
-var setDate = function(date) {
-  //convert string date to Date class
-}
 
 /**
  * Tweet Schema
  */
+  
 var TweetSchema = new Schema({
   // user: { type : Schema.ObjectId, ref : 'User' },
   // keywords: { type : Array, ref : 'User' },
@@ -106,100 +70,20 @@ var TweetSchema = new Schema({
     profile_text_color: String,
     profile_use_background_image: Boolean,
     default_profile: Boolean,
-    deafult_profile_image: Boolean,
+    default_profile_image: Boolean,
     notifications: Boolean
   }
 })
 
-
 /**
- * Validations
- */
-// 
-// TweetSchema.path('description').validate(function (data) {
-//   return data.description.length > 0
-// }, 'Tweet description cannot be blank')
-
-/**
- * Pre-remove hook
+ * Pre-save hook
  */
 
-TweetSchema.pre('remove', function (next) {
-  var imager = new Imager(imagerConfig, 'S3')
-  var files = this.image.files
-
-  // if there are files associated with the item, remove from the cloud too
-  imager.remove(files, function (err) {
-    if (err) return next(err)
-  }, 'tweet')
-
-  next()
+TweetSchema.pre('save', function(next) {
+  //set language from language 639-1 code
+  this.lang = langs[this.lang].name
+  return next()
 })
-
-/**
- * Methods
- */
-
-TweetSchema.methods = {
-
-  /**
-   * Save tweet
-   *
-   * @param {Object} images
-   * @param {Function} cb
-   * @api private
-   */
-  
-  /**
-   * Save tweet and upload image
-   *
-   * @param {Object} images
-   * @param {Function} cb
-   * @api private
-   */
-
-  uploadAndSave: function (images, cb) {
-    if (!images || !images.length) return this.save(cb)
-
-    var imager = new Imager(imagerConfig, 'S3')
-    var self = this
-
-    imager.upload(images, function (err, cdnUri, files) {
-      if (err) return cb(err)
-      if (files.length) {
-        self.image = { cdnUri : cdnUri, files : files }
-      }
-      self.save(cb)
-    }, 'tweet')
-  },
-
-  /**
-   * Add comment
-   *
-   * @param {User} user
-   * @param {Object} comment
-   * @param {Function} cb
-   * @api private
-   */
-
-  addComment: function (user, comment, cb) {
-    var notify = require('../mailer/notify')
-
-    this.comments.push({
-      body: comment.body,
-      user: user._id
-    })
-
-    notify.comment({
-      tweet: this,
-      currentUser: user,
-      comment: comment.body
-    })
-
-    this.save(cb)
-  }
-
-}
 
 /**
  * Statics
@@ -245,44 +129,5 @@ TweetSchema.statics = {
 
 mongoose.model('Tweet', TweetSchema)
 
-
-
-
-
-
-
-/**
- * Module dependencies.
- */
-// 
-// var mongoose = require('mongoose')
-//   , Tweet = mongoose.model('Tweet')
-// 
-// /**
-//  * List items tagged with a tag
-//  */
-// 
-// exports.index = function (req, res) {
-//   var criteria = { tags: req.param('tag') }
-//   var perPage = 5
-//   var page = req.param('page') > 0 ? req.param('page') : 0
-//   var options = {
-//     perPage: perPage,
-//     page: page,
-//     criteria: criteria
-//   }
-// 
-//   Tweet.list(options, function(err, tweets) {
-//     if (err) return res.render('500')
-//     Tweet.count(criteria).exec(function (err, count) {
-//       res.render('tweets/index', {
-//         title: 'Tweets tagged ' + req.param('tag'),
-//         tweets: tweets,
-//         page: page,
-//         pages: count / perPage
-//       })
-//     })
-//   })
-// }
 
 

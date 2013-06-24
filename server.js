@@ -45,7 +45,7 @@ var port = process.env.PORT || 3000
 server.listen(port)
 console.log('Express app started on port '+port)
 
-// Start twitter engine
+// Start server connections
 require('./app/modules/server_connections')(server);
 
 // expose app

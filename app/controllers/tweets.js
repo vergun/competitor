@@ -34,8 +34,6 @@ var mongoose = require('mongoose')
  */
 
 exports.load = function(req, res, next, id){
-  var User = mongoose.model('User')
-
   Tweet.load(id, function (err, tweet) {
     if (err) return next(err)
     if (!tweet) return next(new Error('not found'))
@@ -49,26 +47,27 @@ exports.load = function(req, res, next, id){
  */
 
 exports.index = function(req, res){
-  var page = (req.param('page') > 0 ? req.param('page') : 1) - 1
-  var perPage = 30
-  var options = {
-    perPage: perPage,
-    page: page
-  }
-
-  Tweet.list(options, function(err, tweets) {
-    if (err) return res.render('500')
-    Tweet.count().exec(function (err, count) {
-      res.render('index', {
-        title: null,
-        tweets: tweets,
-        page: page + 1,
-        pages: Math.ceil(count / perPage),
-        user: new User()
-      })
+  if (req.isAuthenticated()) {
+    Tweet.find({}, function(err, tws) {
+      if (err) return err
+      if (!err) {
+        res.render('index', {
+          tweets: tws,
+          lang: _.countBy(_.pluck(tws, 'lang'), function(tw) { return tw }),
+          source: _.countBy(_.pluck(tws, 'source'), function(tw) { return tw }),
+          verified: _.countBy(_.pluck(tws, function(t) { return t.verified}), function(tw) { return tw }),
+          recent: _.sortBy(tws, 'id'),
+        })
+      }
     })
-  })
-}
+  } else {
+    res.render('index', {
+      user: new User()
+    })
+  }
+} 
+
+
 
 /**
  * New tweet
@@ -152,7 +151,12 @@ exports.destroy = function(req, res){
 
 
 exports.explore = function(req, res){
+  var user = req.profile
   res.render('tweets/explore', {
-    title: "Explore"
+    title: "Explore",
+    user: user
   })
+  
+
+ 
 }

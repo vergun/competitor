@@ -45,28 +45,22 @@ module.exports = function (app, passport) {
   app.param('userId', users.user)
 
   // tweet routes
-  app.get('/tweets', tweets.index)
+  app.get('/tweets', tweetAuth, tweets.index)
   app.get('/tweets/new', auth.requiresLogin, tweets.new)
   app.post('/tweets', auth.requiresLogin, tweets.create)
-  app.get('/tweets/:id', tweets.show)
+  app.get('/tweets/:id', tweetAuth, tweets.show)
   app.get('/tweets/:id/edit', tweetAuth, tweets.edit)
   app.put('/tweets/:id', tweetAuth, tweets.update)
   app.del('/tweets/:id', tweetAuth, tweets.destroy)
 
   app.param('id', tweets.load)
   
-  // explore route
-  app.get('/activity', users.activity)
-  
   // activity route
-  app.get('/explore', tweets.explore)
+  app.get('/activity/:userId', auth.requiresLogin, users.activity)
   
-  // comment routes
-  var comments = require('../app/controllers/comments')
-  app.post('/tweets/:id/comments', auth.requiresLogin, comments.create)
-
-  // tag routes
-  var tags = require('../app/controllers/tags')
-  app.get('/tags/:tag', tags.index)
+  // explore route
+  app.get('/explore/:userId', auth.requiresLogin, tweets.explore)
+  //
+	app.get('*', function(req, res) { res.render('404', { title: 'Page Not Found'}); }); 
 
 }
