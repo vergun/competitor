@@ -175,10 +175,11 @@
     
     replaceTotalTweets: function(chart, data) {
       var total = 0;
+      if (chart === "Bar" || chart === "Line" || chart === "Radar") data = data.datasets;
+      
       $.each(data, function(index, element) {
         total = total + element.value;
       });
-      console.log(total);
       $("#tweets-total").text(total + " Tweets");
     }
     

@@ -32,7 +32,7 @@ exports.addColorsToGraphData = function(colors, graphData) {
 }
 
 exports.setup = function(req, query) {
-  var query = query.split("&")
+var query = query.split("&")
   , dates = query[0].replace("date=", "").split('.')
   , time_range = (dates.length > 1) 
       ? [ new Date(moment(dates[0]).startOf('day')), new Date(moment(dates[1]).startOf('day')) ] 

@@ -37,7 +37,7 @@ h4
 
 hr
 ul.tweets
-  each tweet in created
+  each tweet in displayedTweets
     li.tweet 
       img(src=tweet.user.profile_image_url)
       span.user-screen-name=tweet.user.screen_name 

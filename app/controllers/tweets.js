@@ -71,39 +71,27 @@ exports.index = function(req, res){
   if (req.isAuthenticated()) {
     var user = req.user 
     Tweet.find({user_id: req.user._id, created_at: { $gt: moment().startOf('day') }}, null, { sort: {id: -1} }, function(err, tws) {
-      if (err) return err
-      if (!err) {
-        if(tws.length) {
-          
-          var colors = ["#F38630", "#E0E4CC", "#69D2E7", "#6AD2E7", "#6A93E7", "#7F6AE7", "#BD6AE7", "#6AE7BD", "#35C2DE", "#1E9FB8", "#E76AD2", "#6AE77F", "#B8381E", "#DE5135", "#E76A93", "#D2E76A", "#E7BD6A", "#E77F6A"];
-          var arrayOfTweetsKeyword = _.map(_(tws).countBy('keyword'), function(value, key) { return { "color" : null, "value" : value, "keyword" : key, "percentage" : ( ( value / tws.length ) * 100).toFixed(2) } });
-          for (var i=0; i<arrayOfTweetsKeyword.length; i++) {
-            arrayOfTweetsKeyword[i].color = colors[i];
-          }
-          
-          // setup tweets data 
-          var arrayOfTweetsSource = _.map(_(tws).countBy('source'), function (value, key) { return [key, value] });
-          var arrayOfTweetsLanguage = _.map(_(tws).countBy('lang'), function (value, key) { return [key, value] });
-          var limitedTweets = tws.slice(0, 19);
+      if (err) return next(err)
+      if(tws.length) {
+        
+        var query = "date=&chart=Pie&keywords=" + user.keywords.replace(/ /g, "_").split(",").join(";") + "&since=&context=Total"
+          , d = chartsHelper.setup(req, query)          
+          , graphData = chartsHelper.formatGraphData( d.colors, tws, chartsHelper.addColorsToGraphData )
+          , arrayOfTweetsSource = _.map(_(tws).countBy('source'), function (value, key) { return [key, value] })
+          , arrayOfTweetsLanguage = _.map(_(tws).countBy('lang'), function (value, key) { return [key, value] });
                   
           res.render('index', {
-            //charts
-            chartData: arrayOfTweetsKeyword,            
-            //tweets data
-            tweets: tws,
-            // _(tws).sortBy('created_at').reverse(),
-            created: tws.slice(0, 10),
-            recent: _(tws).sortBy('id').reverse(),
-            lang: _.sortBy(arrayOfTweetsLanguage, function (t) { return t[1] }).reverse(),
-            source: _.sortBy(arrayOfTweetsSource, function (t) { return t[1] }).reverse(),
-            recent_tweet: _(tws).sortBy('id').reverse()[0],
-            since: _(tws).sortBy('id')[0].id,
-            user: user
+            chartData: graphData
+          , tweets: tws
+          , displayedTweets: tws.slice(0, 10)
+          , lang: _.sortBy(arrayOfTweetsLanguage, function (t) { return t[1] }).reverse()
+          , source: _.sortBy(arrayOfTweetsSource, function (t) { return t[1] }).reverse()
+          , since: _(tws).sortBy('id')[0].id
+          , user: user
           })
         } else {
           res.render('tweets/_index_empty', {});
         }
-      }
     }) 
   } else {
     res.render('index', {
