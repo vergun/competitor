@@ -128,15 +128,19 @@
       var ctx = document.getElementById("myChart").getContext("2d");
       new Chart(ctx).Pie(eval("(" + document.getElementById("chart-data").value + ")"), { animation: true } );  
     },
+    
     receivedChartData: function(dates, chart, keywords, data) {   
       var since = data.since
-        , data = data.chartData;
+        , data = data.chartData
+        , chart = chart.split("=")[1]
+                  
       Charts.replaceChart(dates, chart, keywords, data);
-      Charts.replaceChartLegend(chart, data); 
-      console.log(data);
-      Charts.replaceTotalTweets(data);
-      UI.setSince(since);
+      Charts.replaceChartLegend(chart, data);       
+      Charts.replaceTotalTweets(chart, data);  
+          
+      UI.setSince(since);      
       UI.removeLoading();
+      
     },
     // ajax call to fetch new data
     getChartData: function(dates, chart, keywords, since, context, callback) {      
@@ -150,18 +154,15 @@
     
     // replaces current chart todo expand to replace page content
     replaceChart: function(dates, chart, keywords, data) {
-      var chart = chart.split("=")[1]
-        , ctx = document.getElementById("myChart").getContext("2d");
-                
+      var ctx = document.getElementById("myChart").getContext("2d");
       new Chart(ctx)[chart](data, { animation: true } ); 
     },
     
     replaceChartLegend: function(chart, data) {
-      var container = $('.current-chart-legend');
-      var content = "<br />"
+      if (chart === "Bar" || chart === "Line" || chart === "Radar") data = data.datasets;
       
-      if (chart === "Bar" || chart === "Line" || chart == "Radar") data = data.datasets;
-      if (chart === "Doughnut" || chart === "Pie" || chart === "PolarArea") data = data;
+      var container = $('.current-chart-legend')
+        , content = "<br />"
       
       $(data).each(function(index, dataPoint) {
         content = content 
@@ -172,7 +173,7 @@
       container.html(content);
     },
     
-    replaceTotalTweets: function(data) {
+    replaceTotalTweets: function(chart, data) {
       var total = 0;
       $.each(data, function(index, element) {
         total = total + element.value;
