@@ -23,11 +23,13 @@ exports.load = function(req, res, next, id){
 }
 
 
+//todo case when there is no data, return what?
 exports.getChartData = function(req, res, next, query) {
   
   var query = query.split("&")
   , dates = query[0]
   , chart = query[1]
+  , keywords = query[2];
   
   if (req.isAuthenticated()) {
     
@@ -47,21 +49,14 @@ exports.getChartData = function(req, res, next, query) {
   
     }
     
-    if (!dates) {
-       var time_range = [moment().subtract('years', 3),moment().format()]; //todo set as a specific day in time
+    if (!dates) var time_range = [moment().subtract('years', 3),moment().format()]; //todo set as a specific day in time
        //todo always submit dates as current day if no date selected
-    }
-    
-    if (chart.indexOf("chart=") !== -1) {
-      
-      chart = chart.replace("chart=", "")
-      if (!chart) chart = "unknown";
-      console.log(chart);
-      
-    }
+    if (chart.indexOf("chart=") !== -1) chart = chart.replace("chart=", "")
+    if (keywords.indexOf("keywords=") !== -1) keywords = keywords.replace("keywords=", "").replace(/_/g, " ").split(';');
+
 
     //working but created_at time is being entered as utc or something
-    Tweet.find({user_id: req.user._id, requested_at: {$gte : time_range[0], $lte : time_range[1]} }, null, { limit: 300 }, function(err, tws) {
+    Tweet.find({user_id: req.user._id, keyword: {$in: keywords}, requested_at: {$gte : time_range[0], $lte : time_range[1]} }, null, { limit: 300 }, function(err, tws) {
       
       if (err) return next(err);      
       if (!err) {
@@ -99,13 +94,15 @@ exports.getChartData = function(req, res, next, query) {
               "pointStrokeColor" : null,
               "keyword" : key, 
               "percentage" : ( ( value / tws.length ) * 100).toFixed(2),
-              "data" : [value]
+              "data" : [value],
+              "value" : value,
+              "color" : null
               } 
             });
             
             for (var i=0; i<arrayOfTweetsKeyword.length; i++) {
               var current = arrayOfTweetsKeyword[i];
-              current.fillColor = current.strokeColor = current.pointColor = current.pointStrokeColor = colors[i];
+              current.fillColor = current.strokeColor = current.pointColor = current.pointStrokeColor = current.color = colors[i];
             }
             
             data.datasets = arrayOfTweetsKeyword;
