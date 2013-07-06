@@ -69,17 +69,28 @@
     getChart: function() {
       
       $(document).delegate('#submit-date-range, .update-chart', 'click', function(e){
+        UI.showLoading();
         UI.getData(e, "totals");
       })
       
     },
     
     getTweetsPaginate: function() {
-      
       $(document).delegate('a.pagination', 'click', function(e) {
+        UI.showLoading();
         UI.getData(e, "tweets");
       })
       
+    },
+    
+    showLoading: function() {
+      var mainContent = $('.main-content')
+      mainContent.prepend("<h1 class='loading'><div>Loading...</div></h1>")
+    },
+    
+    removeLoading: function() {
+      var loading = $('.loading')
+      loading.remove();
     },
     
     getData: function (e, context ) {
@@ -125,6 +136,7 @@
       console.log(data);
       Charts.replaceTotalTweets(data);
       UI.setSince(since);
+      UI.removeLoading();
     },
     // ajax call to fetch new data
     getChartData: function(dates, chart, keywords, since, context, callback) {      
