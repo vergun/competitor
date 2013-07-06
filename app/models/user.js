@@ -37,7 +37,6 @@ var UserSchema = new Schema({
   username: String,
   keywords: {type: [], get: getKeywords, set: setKeywords},
   plan: String,
-  provider: String,
   hashed_password: String,
   salt: String,
   authToken: String,
@@ -109,9 +108,18 @@ UserSchema.path('hashed_password').validate(function (hashed_password) {
  */
 
 UserSchema.pre('save', function(next) {
-  if (!this.isNew) return next()
+  if (!this.isNew) {
+    this.plan = "Free"
+    // this.keywords = _(this.keywords).each(function(k) { k.replace("'", "") }) //todo dry //
+    return next()
+  }
   if (!validatePresenceOf(this.password)) next(new Error('Invalid password'))
-  else next()
+  else { 
+    this.plan = "Free"
+    // this.keywords = _(this.keywords).each(function(k) { k.replace("'", "")} )
+    // todo separate keywords for each user //
+    next()
+  }
 })
 
 /**

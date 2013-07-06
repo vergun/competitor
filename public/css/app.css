@@ -30,3 +30,30 @@ ul.tweets { list-style-type: none }
 ul.tweets li { background: #efefef; }
 ul.tweets li:nth-child(odd) { background: #fff; }
 p.offset2.message {color:green;}
+canvas#myChart, canvas#myChart2, canvas#myChart3 { width: 400px; height: 400px;}
+
+.progress-meter .background {
+  fill: #ccc;
+}
+
+.progress-meter .foreground {
+  fill: #000;
+}
+
+.progress-meter text {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.chartBox {
+  width: 20px;
+  height: 20px;
+}
+.chartBox span {
+  display:inline;
+}
+
+button.selected {
+  color: blue;
+}

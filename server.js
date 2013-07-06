@@ -53,5 +53,8 @@ var io = require('socket.io').listen(server);
 // Start Twitter stream engine //
 require('./app/modules/server_connections')(twit, config, io);
 
+// Start cron //
+require('./app/modules/cron').cron();
+
 // expose app
 exports = module.exports = app

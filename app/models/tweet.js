@@ -9,6 +9,8 @@ var mongoose = require('mongoose')
   , imagerConfig = require(config.root + '/config/imager.js')
   , langs = require('../../lib/langs')
   , Schema = mongoose.Schema
+  , fs = require('fs')
+  , moment = require('moment')
 
 /**
  * Tweet Schema
@@ -16,8 +18,9 @@ var mongoose = require('mongoose')
   
 var TweetSchema = new Schema({
   user_id: {type : Schema.ObjectId, ref : 'User'},
+  keyword: String,
   keywords: Array,
-  request_date: Date,
+  requested_at: Date,
   created_at: Date,
   id: Number,
   id_str: String,
@@ -82,10 +85,10 @@ var TweetSchema = new Schema({
 
 TweetSchema.pre('save', function(next) {
   //set language from language 639-1 code
-  if (langs[this.lang].name) this.lang = langs[this.lang].name
-  if (!langs[this.lang].name) console.log(this.lang + " NOT FOUND!!!!!!!!") //todo remove
+  if (langs[this.lang]) this.lang = langs[this.lang].name;
+  if (!langs[this.lang]) fs.appendFile('../../lang.txt', this.lang); //todo remove
   this.created_at = new Date(this.created_at)
-  this.request_date = new Date()
+  this.requested_at = moment().format();
   return next()
 })
 

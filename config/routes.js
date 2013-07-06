@@ -48,12 +48,14 @@ module.exports = function (app, passport) {
   app.get('/tweets', tweetAuth, tweets.index)
   app.get('/tweets/new', auth.requiresLogin, tweets.new)
   app.post('/tweets', auth.requiresLogin, tweets.create)
+  app.get('/tweets/chart/:chart', auth.requiresLogin, tweets.chart)
   app.get('/tweets/:id', tweetAuth, tweets.show)
   app.get('/tweets/:id/edit', tweetAuth, tweets.edit)
   app.put('/tweets/:id', tweetAuth, tweets.update)
   app.del('/tweets/:id', tweetAuth, tweets.destroy)
 
   app.param('id', tweets.load)
+  app.param('chart', tweets.getChartData)
   
   // activity route
   app.get('/activity', auth.requiresLogin, users.activity)

@@ -1,15 +1,66 @@
+script(src='/js/chart.js')
+
 hr
 h1= tweets.length + " Total"
-hr
 
 h1 Most recent tweet
-p=recent[0].created_at
+input(name='document[id]', value=JSON.stringify(chartData), type='hidden', id='chart-data')
+p=recent_tweet.created_at
 p
   img(src=recent[0].user.profile_image_url)
-p=recent[0].user.name
-p=recent[0].text
+p=recent_tweet.user.name
+p=recent_tweet.text
 
-p=recent[0].user.friends_count + " Friends"
+p=recent_tweet.user.friends_count + " Friends"
+
+      
+h2 Tracking
+  - var keywords = user.keywords.split(',')
+  Tracking
+  each keyword in keywords
+    button.update-keyword.group-toggle.selected(data-keyword=keyword)=keyword
+    
+h4
+  a(href='/users/' + user.id) To edit your keywords click here
+    
+  
+  h2 Date range
+  .date-range
+    label(for="from") From
+    input#from(type="text", name="from")
+    label(for="to") to
+    input#to(type="text", name="to")
+    button#submit-date-range Go
+  
+  
+  br
+  h2 Chart type
+  .chart-types
+    button.update-chart.group-radial.selected(data-chart="Pie") Pie
+    button.update-chart.group-radial(data-chart="Doughnut") Doughnut
+    button.update-chart.group-radial(data-chart="PolarArea") Polar area
+    button.update-chart.group-radial(data-chart="Bar") Bar
+    button.update-chart.group-radial(data-chart="Line") Line
+    button.update-chart.group-radial(data-chart="Radar") Radar
+  .current-chart
+    canvas#myChart
+  .current-chart-legend
+    each dataPoint in chartData
+      br
+      .chartBox(style= "background-color:" + dataPoint.color + "; display:inline-block")
+      span= dataPoint.keyword + " (" + dataPoint.value + " tweets  " + dataPoint.percentage + "%)"
+  
+
+hr
+ul.tweets
+  each tweet in created
+    li.tweet 
+      img(src=tweet.user.profile_image_url)
+      span.user=tweet.user.screen_name 
+      span.text= tweet.text
+      span.keywords Tracked by: #{tweet.keywords}
+      span.lang= tweet.lang
+      span.source= tweet.source
 
 h1 Tweets by language
 ul.tweets

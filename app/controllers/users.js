@@ -6,11 +6,13 @@ var mongoose = require('mongoose')
   , User = mongoose.model('User')
   , utils = require('../../lib/utils')
   , _ = require('underscore')
+  , fs = require('fs')
   , env = process.env.NODE_ENV || 'development'  
   , config = require('../../config/config')[env]
   , twitter = require('ntwitter')
-  , twit = new twitter(config.twitter) // creating new Twitter here & server.js // todo
-  
+  , twit = new twitter(config.twitter)
+  , tweets = require('../modules/tweets_helper')
+  , mixpanel = require('../modules/mixpanel')
   
 /**
  * Show activity page
@@ -73,21 +75,22 @@ exports.session = function (req, res) {
  */
 
 exports.create = function (req, res) {
-  var user = new User(req.body)
-  user.provider = 'local'
-  user.save(function (err) {
+      
+  var user = new User(req.body);
+  user.save(function (err, data) {
     if (err) { 
-      // pass errors in todo // 
+      // pass errors in // todo // 
       return res.redirect('/')
     }
-    // Fetch tweets //
-    var fetchTweets = require('../modules/tweets_helper')(twit, user.keywords, user, function() {
-      // manually login the user once successfully signed up
-      req.logIn(user, function(err) {
-        if (err) return next(err)
-        return res.redirect('/')
+    if (!err) {
+      mixpanel.setMixpanelUserData(data);
+      mixpanel.track("User created");
+    }
+    tweets.search(twit, user.keywords, user, req.logIn(user, function(err) {
+        if (err) fs.appendFile('../../lang.txt', err); //todo remove
+          return res.redirect('/')
       })
-    });
+    );
   })
 }
 
@@ -122,13 +125,15 @@ exports.edit = function (req, res) {
 exports.update = function(req, res){
   var user = req.user
     , user = _.extend(user, req.body)
-  user.save(function (err, cb) {
+  user.save(function (err, data, cb) {
     if (!err) {
       res.render('users/show', {
         title: user.name,
         message: 'User was successfully updated.',
         user: user
       })
+      mixpanel.setMixpanelUserData(data);
+      mixpanel.track("User updated");
     }
     if (err) {
       res.render('users/edit', {
