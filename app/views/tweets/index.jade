@@ -1,29 +1,14 @@
-script(src='/js/chart.js')
-
+h1#tweets-total= tweets.length + " Tweets"
 hr
-h1= tweets.length + " Total"
 
-h1 Most recent tweet
-input(name='document[id]', value=JSON.stringify(chartData), type='hidden', id='chart-data')
-p=recent_tweet.created_at
-p
-  img(src=recent[0].user.profile_image_url)
-p=recent_tweet.user.name
-p=recent_tweet.text
 
-p=recent_tweet.user.friends_count + " Friends"
-
-      
 h2 Tracking
-  - var keywords = user.keywords.split(',')
   Tracking
   each keyword in keywords
     button.update-keyword.group-toggle.selected(data-keyword=keyword)=keyword
     
 h4
   a(href='/users/' + user.id) To edit your keywords click here
-    
-  
   h2 Date range
   .date-range
     label(for="from") From
@@ -31,7 +16,6 @@ h4
     label(for="to") to
     input#to(type="text", name="to")
     button#submit-date-range Go
-  
   
   br
   h2 Chart type
@@ -56,11 +40,19 @@ ul.tweets
   each tweet in created
     li.tweet 
       img(src=tweet.user.profile_image_url)
-      span.user=tweet.user.screen_name 
+      span.user-screen-name=tweet.user.screen_name 
+      span.user-name=tweet.user.name
       span.text= tweet.text
       span.keywords Tracked by: #{tweet.keywords}
       span.lang= tweet.lang
       span.source= tweet.source
+      span.user-friends-count=tweet.user.friends_count + " Friends"
+      
+  if (pages > 1)
+    .pagination
+      ul
+        != createPagination(pages, page)
+
 
 h1 Tweets by language
 ul.tweets

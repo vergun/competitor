@@ -57,26 +57,53 @@
       return keywords;
     },
     
+    getSince: function() {
+      return $('#chart-since').val();
+    },
+    
+    setSince: function(tweetId) {
+      $('#chart-since').val(tweetId)      
+    },
+    
     //click 'go' on datepicker or new chart
     getChart: function() {
       
       $(document).delegate('#submit-date-range, .update-chart', 'click', function(e){
-        
-        e.preventDefault();
-        
-        var dates = $("#from").val() + "." + $("#to").val();
-        if (dates.length > 1) dates = "date=" + dates
-        if (dates.length == 1) dates = "date="
-        
-        var chart = $('.chart-types').children('.selected').data('chart');
-        chart = "&chart=" + chart;
-        
-        var keywords = UI.getKeywords();
-        //remove spaces combine with ';'
-        keywords = "&keywords=" + keywords.join(";").replace(/ /g, "_");
-        Charts.getChartData(dates, chart, keywords, Charts.receivedChartData); 
-        
+        UI.getData(e, "totals");
       })
+      
+    },
+    
+    getTweetsPaginate: function() {
+      
+      $(document).delegate('a.pagination', 'click', function(e) {
+        UI.getData(e, "tweets");
+      })
+      
+    },
+    
+    getData: function (e, context ) {
+      
+      e.preventDefault();
+      
+      var dates = $("#from").val() + "." + $("#to").val();
+      if (dates.length > 1) dates = "date=" + dates
+      if (dates.length == 1) dates = "date="
+      
+      var chart = $('.chart-types').children('.selected').data('chart');
+      chart = "&chart=" + chart;
+      
+      var keywords = UI.getKeywords();
+      keywords = "&keywords=" + keywords.join(";").replace(/ /g, "_");
+      
+      var since = UI.getSince();
+      since = "&since=" + since
+      
+      var context = context;
+      context = "&context=" + context
+            
+      Charts.getChartData(dates, chart, keywords, since, context, Charts.receivedChartData); 
+      
     }
 
     
@@ -90,14 +117,18 @@
       var ctx = document.getElementById("myChart").getContext("2d");
       new Chart(ctx).Pie(eval("(" + document.getElementById("chart-data").value + ")"), { animation: true } );  
     },
-    receivedChartData: function(dates, chart, keywords, data) {
-      var data = data.chartData;  
+    receivedChartData: function(dates, chart, keywords, data) {   
+      var since = data.since
+        , data = data.chartData;
       Charts.replaceChart(dates, chart, keywords, data);
-      
+      Charts.replaceChartLegend(chart, data); 
+      console.log(data);
+      Charts.replaceTotalTweets(data);
+      UI.setSince(since);
     },
     // ajax call to fetch new data
-    getChartData: function(dates, chart, keywords, callback) {
-      $.ajax('/tweets/chart/' + dates + chart + keywords + '/', {
+    getChartData: function(dates, chart, keywords, since, context, callback) {      
+      $.ajax('/tweets/chart/' + dates + chart + keywords + since + context + '/', {
         type: 'GET',
         dataType: 'json',
         success: function(data) { if ( callback ) callback(dates, chart, keywords, data); },
@@ -111,11 +142,12 @@
         , ctx = document.getElementById("myChart").getContext("2d");
                 
       new Chart(ctx)[chart](data, { animation: true } ); 
-      Charts.replaceChartLegend(chart, data); 
     },
+    
     replaceChartLegend: function(chart, data) {
       var container = $('.current-chart-legend');
       var content = "<br />"
+      
       if (chart === "Bar" || chart === "Line" || chart == "Radar") data = data.datasets;
       if (chart === "Doughnut" || chart === "Pie" || chart === "PolarArea") data = data;
       
@@ -124,9 +156,17 @@
                 + "<div class='chartBox', style='background-color:" + dataPoint.color + "; display:inline-block'></div>"
                 + "<span>" + dataPoint.keyword + " (" + dataPoint.value + " tweets  " + dataPoint.percentage + "%)" + "</span><br />";
       });
-      console.log(data);
-      
+            
       container.html(content);
+    },
+    
+    replaceTotalTweets: function(data) {
+      var total = 0;
+      $.each(data, function(index, element) {
+        total = total + element.value;
+      });
+      console.log(total);
+      $("#tweets-total").text(total + " Tweets");
     }
     
   }

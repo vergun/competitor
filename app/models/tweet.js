@@ -112,7 +112,7 @@ TweetSchema.statics = {
       .populate('comments.user')
       .exec(cb)
   },
-
+  
   /**
    * List tweets
    *
@@ -121,15 +121,16 @@ TweetSchema.statics = {
    * @api private
    */
 
-  list: function (options, cb) {
+  list : function(options, cb) {
     var criteria = options.criteria || {}
-
+        
     this.find(criteria)
-      .populate('user', 'name username')
-      .sort({'createdAt': -1}) // sort by date
-      .limit(options.perPage)
-      .skip(options.perPage * options.page)
+      // .populate('user', 'name username')
+      .sort({'id': -1})
+      // .limit(options.perPage)
+      // .skip(options.perPage * options.page)
       .exec(cb)
+      
   }
 
 }
