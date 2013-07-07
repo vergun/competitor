@@ -4,6 +4,8 @@
   
   var UI = {
     
+    maxDate: new Date(),
+    
     setupElements: function() {
       //from datepicker
       $( "#from" ).datepicker({
@@ -21,6 +23,7 @@
         defaultDate: "+1w",
         changeMonth: true,
         numberOfMonths: 1,
+        maxDate: this.maxDate,
         onClose: function( selectedDate ) {
           $( "#from" ).datepicker( "option", "maxDate", selectedDate );
         }
@@ -98,6 +101,7 @@
       e.preventDefault();
       
       var dates = $("#from").val() + "." + $("#to").val();
+      
       if (dates.length > 1) dates = "date=" + dates
       if (dates.length == 1) dates = "date="
       

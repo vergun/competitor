@@ -65,18 +65,28 @@ exports.getChartData = function(req, res, next, query) {
   }
 }
 
-//todo condense into getChartData
-// limit: 20, 
+
 exports.index = function(req, res){
   if (req.isAuthenticated()) {
-    var user = req.user 
-    Tweet.find({user_id: req.user._id, created_at: { $gt: moment().startOf('day') }}, null, { sort: {id: -1} }, function(err, tws) {
+    
+    var query = "date=&chart=Pie&keywords=" + req.user.keywords.replace(/ /g, "_").split(",").join(";") + "&since=&context=Total"
+      , d = chartsHelper.setup(req, query)   
+    
+    var options = {  
+        perPage: d.perPage
+      , page: d.page
+      , criteria: {
+          user_id: d.user._id 
+        , keyword: {$in: d.keywords}
+        , requested_at: { $gte : d.time_range[0], $lte : d.time_range[1] }
+        }
+      }
+      
+    Tweet.list(options, function(err, tws) {
       if (err) return next(err)
       if(tws.length) {
         
-        var query = "date=&chart=Pie&keywords=" + user.keywords.replace(/ /g, "_").split(",").join(";") + "&since=&context=Total"
-          , d = chartsHelper.setup(req, query)          
-          , graphData = chartsHelper.formatGraphData( d.colors, tws, chartsHelper.addColorsToGraphData )
+        var graphData = chartsHelper.formatGraphData( d.colors, tws, chartsHelper.addColorsToGraphData )
           , arrayOfTweetsSource = _.map(_(tws).countBy('source'), function (value, key) { return [key, value] })
           , arrayOfTweetsLanguage = _.map(_(tws).countBy('lang'), function (value, key) { return [key, value] });
                   
@@ -87,7 +97,7 @@ exports.index = function(req, res){
           , lang: _.sortBy(arrayOfTweetsLanguage, function (t) { return t[1] }).reverse()
           , source: _.sortBy(arrayOfTweetsSource, function (t) { return t[1] }).reverse()
           , since: _(tws).sortBy('id')[0].id
-          , user: user
+          , user: d.user
           })
         } else {
           res.render('tweets/_index_empty', {});

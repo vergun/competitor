@@ -32,10 +32,16 @@ exports.addColorsToGraphData = function(colors, graphData) {
 }
 
 exports.setup = function(req, query) {
+  console.log(moment("06/26/2013"));
+  console.log(moment("06/26/2013").format());
+  console.log(moment("06/26/2013").startOf('day'));
+  console.log(moment("06/26/2013").endOf('day'));
+  
+  
 var query = query.split("&")
   , dates = query[0].replace("date=", "").split('.')
-  , time_range = (dates.length > 1) 
-      ? [ new Date(moment(dates[0]).startOf('day')), new Date(moment(dates[1]).startOf('day')) ] 
+  , time_range = ( dates.length > 1 ) 
+      ? [ new Date(moment(dates[0]).startOf('day')), new Date(moment(dates[1]).endOf('day')) ] 
       : [ new Date(moment().startOf('day')), new Date(moment().endOf('day')) ]
   , chart = query[1].replace("chart=", "")
   , keywords = query[2].replace("keywords=", "").replace(/_/g, " ").split(';')
