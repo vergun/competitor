@@ -4,6 +4,7 @@
 
 var _ = require('underscore')
   , moment = require('moment')
+  , datesHelper = require('../modules/dates_helper')
 
 
 exports.formatGraphData = function(colors, tws, cb) {
@@ -33,11 +34,6 @@ exports.addColorsToGraphData = function(colors, graphData) {
 
 exports.setup = function(req, query) {
   
-  // days, weeks, months
-  // compare dates first and second distance from one another
-  // if less than 7 days display days
-  // if more than 7 days display months
-  
 var query = query.split("&")
   , dates = query[0].replace("date=", "").split('.')
   , time_range = ( dates.length > 1 ) 
@@ -48,66 +44,8 @@ var query = query.split("&")
   , since = query[3].replace("since=", "")
   , context = query[4].replace("context=", "")
   , perPage = 30
-  , page = (req.param('page') > 0 ? req.param('page') : 1) - 1
-  
-  
-  //** start tests **/
-  
-  Date.prototype.addDays = function(days) {
-      var dat = new Date(this.valueOf())
-      dat.setDate(dat.getDate() + days);
-      return dat;
-  }
-  
-  function getDates(startDate, stopDate) {
-     var dateArray = new Array();
-     var currentDate = startDate;
-     while (currentDate <= stopDate) {
-       dateArray.push(currentDate)
-       currentDate = currentDate.addDays(1);
-     }
-     return dateArray;
-   }
-   
-   var dateArray = getDates(time_range[0], time_range[1]);
-   
-   if ( dateArray.length <= 7 ) {
-     
-     for (i = 0; i < dateArray.length; i ++ ) {
-         dateArray[i] = moment(dateArray[i]).format('dddd');
-     } 
-     
-     
-   } 
-   
-   if ( dateArray.length > 7 && dateArray.length <= 365 ) {
-     
-     for (i = 0; i < dateArray.length; i ++ ) {
-         dateArray[i] = moment(dateArray[i]).format('MMMM');
-     } 
-     
-     dateArray = _.uniq(dateArray);
-     
-   }
-   
-   if ( dateArray.length > 365 ) {
-     
-     for (i = 0; i < dateArray.length; i ++ ) {
-         dateArray[i] = moment(dateArray[i]).format('YYYY');
-     } 
-     
-     dateArray = _.uniq(dateArray);
-     
-     
-   }
-      
-   
-      
-   console.log(dateArray);
-
-   
-   //** end tests **/
-   
+  , page = (req.param('page') > 0 ? req.param('page') : 1) - 1 
+  , dateArray = datesHelper.getDates(time_range[0], time_range[1], datesHelper.formatDate)
   
   return {
     query: query

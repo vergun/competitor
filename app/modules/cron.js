@@ -29,6 +29,6 @@ exports.cron = function() {
     timeZone: "America/Los_Angeles"
   });
   
-  // tweetsFetch.start();
+  tweetsFetch.start();
   
 }

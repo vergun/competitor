@@ -123,6 +123,7 @@ TweetSchema.statics = {
 
   list : function(options, cb) {
     var criteria = options.criteria || {}
+    console.log(criteria);
         
     this.find(criteria)
       // .populate('user', 'name username')

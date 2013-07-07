@@ -99,6 +99,7 @@ exports.index = function(req, res){
           , since: _(tws).sortBy('id')[0].id
           , user: d.user
           })
+          
         } else {
           res.render('tweets/_index_empty', {});
         }
