@@ -7,7 +7,10 @@ var _ = require('underscore')
   , datesHelper = require('../modules/dates_helper')
 
 
-exports.formatGraphData = function(colors, tws, cb) {
+exports.formatGraphData = function ( colors, tws, labels, callback ) {
+    
+  var tweetValues = datesHelper.getTweetValuesByLabels(tws, labels);
+  
   var graphData = _.map(_(tws).countBy('keyword'), function(value, key) { return { 
             "fillColor" : null, 
             "strokeColor" : null, 
@@ -15,16 +18,17 @@ exports.formatGraphData = function(colors, tws, cb) {
             "pointStrokeColor" : null,
             "keyword" : key, 
             "percentage" : ( ( value / tws.length ) * 100).toFixed(2),
-            "data" : [value],
+            "data" : tweetValues[key], //was [value]
             "value" : value,
             "color" : null
             } 
           });
-          
-          return cb(colors, graphData);
+                    
+          if ( typeof(callback) == "function" ) return callback( colors, graphData );
+          return graphData;
 }
 
-exports.addColorsToGraphData = function(colors, graphData) {        
+exports.addColorsToGraphData = function ( colors, graphData ) {        
   for (var i=0; i < graphData.length; i++) {
          var current = graphData[i];
          current.fillColor = current.strokeColor = current.pointColor = current.pointStrokeColor = current.color = colors[i];
@@ -32,7 +36,7 @@ exports.addColorsToGraphData = function(colors, graphData) {
   return graphData;
 }
 
-exports.setup = function(req, query) {
+exports.setup = function ( req, query ) {
   
 var query = query.split("&")
   , dates = query[0].replace("date=", "").split('.')

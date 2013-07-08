@@ -15,7 +15,7 @@ exports.getDates = function ( startDate, stopDate, callback ) {
      currentDate = currentDate.addDays(1);
    }
    
-   if ( typeof(callback) == "function" ) callback( dateArray );
+   if ( typeof(callback) == "function" ) return callback( dateArray );
    return dateArray;
    
  }
@@ -34,5 +34,48 @@ exports.formatDate = function ( dateArray ) {
      } 
       
    return _.uniq( dateArray );
+   
+ }
+ 
+ exports.getTweetValuesByLabels = function( tws, labels ) {
+   
+   var format = ""
+    ,  days = [ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" ]
+    ,  months = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ]
+    ,  years = [ "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020" ]
+    ,  grouped = _(tws).groupBy('keyword')
+   
+   if ( (_.intersection(days, labels) ).length > 0 ) format = "dddd";
+   if ( (_.intersection(months, labels) ).length > 0 ) format = "MMMM";
+   if ( (_.intersection(years, labels) ).length > 0 ) format = "YYYY";   
+   
+   for (var i=0; i<tws.length; i++) {  
+     
+     tws[i].dateformat = "";
+     tws[i].dateformat = moment(tws[i].requested_at).format( format );  
+     
+   }
+   
+   for ( var key in grouped ) {
+     
+      var obj = grouped[key];
+      grouped[key] = _(obj).countBy('dateformat');
+      
+   }
+      
+   for ( var key in grouped ) {
+     
+     var obj = grouped[key];
+     grouped[key] = [];
+       
+     for ( var prop in obj ) {
+  
+      if ( obj.hasOwnProperty(prop) ) {
+           grouped[key].push( obj[prop] )
+         }
+      }
+   }   
+   
+   return grouped;
    
  }
