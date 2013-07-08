@@ -49,33 +49,55 @@ exports.formatDate = function ( dateArray ) {
    if ( (_.intersection(months, labels) ).length > 0 ) format = "MMMM";
    if ( (_.intersection(years, labels) ).length > 0 ) format = "YYYY";   
    
+   // add property dateformat (a label identifier ) to each record in tws
    for (var i=0; i<tws.length; i++) {  
      
      tws[i].dateformat = "";
-     tws[i].dateformat = moment(tws[i].requested_at).format( format );  
+     tws[i].dateformat = moment( tws[i].requested_at ).format( format );  
      
    }
-   
+      
+   // group count by label and keyword
+   // example: { ' hello': { Sunday: 197, Saturday: 1024, Friday: 1874 }
    for ( var key in grouped ) {
      
       var obj = grouped[key];
       grouped[key] = _(obj).countBy('dateformat');
       
    }
+   
+   console.log( grouped );
+   
+   
+   // insert 0's for labels with no values
+   for ( var key in grouped ) {
+     
+     var obj = grouped[key];
+       
+     for (var i=0; i<labels.length; i++) {
+         
+       if (!obj.hasOwnProperty(labels[i]) ) obj[labels[i]] = 0
+           
+      }
+         
+         
+  }
       
+   // remove keywords and store counts in a sorted array
+   // example: { ' hello': [ 197, 1024, 1874 ]  
    for ( var key in grouped ) {
      
      var obj = grouped[key];
      grouped[key] = [];
-       
-     for ( var prop in obj ) {
-  
-      if ( obj.hasOwnProperty(prop) ) {
-           grouped[key].push( obj[prop] )
+     
+     for (var i=0; i<labels.length; i++) {
+         
+      if ( obj.hasOwnProperty(labels[i]) ) {
+           grouped[key].push( obj[labels[i]] )
          }
-      }
-   }   
-   
+     }
+   } 
+      
    return grouped;
    
  }

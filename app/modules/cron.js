@@ -17,7 +17,7 @@ exports.cron = function() {
   // different types of subscriptions
   var tweetsFetch = new cronJob({
     // every 30 minutes
-    cronTime: '00 30 * * * *',
+    cronTime: '* * * * * *',
     onTick: function() {
       User.find({}, function(err, users) {
         _(users).each(function(user) {

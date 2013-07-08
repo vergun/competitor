@@ -44,7 +44,7 @@ exports.getChartData = function(req, res, next, query) {
             
       if (err) return next(err);  
       if (tws.length) {
-                       
+                               
         var graphData = chartsHelper.formatGraphData( d.colors, tws, d.labels, chartsHelper.addColorsToGraphData )
           , data = [];
 
