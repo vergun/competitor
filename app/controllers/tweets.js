@@ -24,26 +24,22 @@ exports.load = function(req, res, next, id){
   })
 }
 
-//todo case when there is no data, return what?
 exports.getChartData = function(req, res, next, query) {
-  var d = chartsHelper.setup(req, query)
-
-  var options = {  
-      perPage: d.perPage
-    , page: d.page
-    , criteria: {
-        user_id: d.user._id 
-      , keyword: {$in: d.keywords}
-      , requested_at: { $gte : d.time_range[0], $lte : d.time_range[1] }
-      }
-    }
-    
   if (req.isAuthenticated()) {
-
-    Tweet.list(options, function(err, tws) {
-            
-      if (err) return next(err);  
-                               
+    
+    var d = chartsHelper.setup(req, query)
+      , options = {  
+          perPage: d.perPage
+        , page: d.page
+      , criteria: {
+          user_id: d.user._id 
+        , keyword: {$in: d.keywords}
+        , requested_at: { $gte : d.time_range[0], $lte : d.time_range[1] }
+        }
+      }
+  
+    Tweet.list(options, function(err, tws) {  
+      if (err) return next(err);                       
         var graphData = chartsHelper.formatGraphData( d.colors, tws, d.labels, chartsHelper.addColorsToGraphData )
           , data = [];
 
@@ -70,8 +66,7 @@ exports.index = function(req, res){
     
     var query = "date=&chart=Pie&keywords=" + req.user.keywords.replace(/ /g, "_").split(",").join(";") + "&since=&context=Total"
       , d = chartsHelper.setup(req, query)   
-    
-    var options = {  
+      , options = {  
         perPage: d.perPage
       , page: d.page
       , criteria: {
