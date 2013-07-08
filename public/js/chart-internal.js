@@ -13,6 +13,7 @@
         defaultDate: "+1w",
         changeMonth: true,
         numberOfMonths: 1,
+        maxDate: this.maxDate,
         onClose: function( selectedDate ) {
           $( "#to" ).datepicker( "option", "minDate", selectedDate );
         }
