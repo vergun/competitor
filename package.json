@@ -39,7 +39,8 @@
     "moment": "latest",
     "mixpanel": "latest",
     "cron": "latest",
-    "time": "latest"
+    "time": "latest",
+    "coffee-script": "latest"
   },
   "devDependencies": {
     "supertest": "latest",

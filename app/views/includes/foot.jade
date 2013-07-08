@@ -1,12 +1,43 @@
-script(src='/js/jquery-1.9.1.js')
-script(src='/js/jquery-ui-1.10.3.custom.js')
+// lib
+script(src='/js/lib/jquery.js')
+script(src='/js/lib/jquery-ui.js')
+script(src='/js/lib/underscore.js')
+script(src='/js/lib/backbone.js')
+script(src='/js/lib/marionette.js')
+script(src='/socket.io/socket.io.js')
+
+// backbone config
+script(src='/js/backbone/config/marionette/application.js')
+script(src='/js/backbone/config/marionette/renderer.js')
+
+// backbone app
+script(src='/js/backbone/app.js')
+
+// backbone entities
+script(src='/js/backbone/entities/_base/collections.js')
+script(src='/js/backbone/entities/_base/collectionview.js')
+script(src='/js/backbone/entities/_base/compositeview.js')
+script(src='/js/backbone/entities/_base/itemview.js')
+script(src='/js/backbone/entities/_base/layout.js')
+script(src='/js/backbone/entities/_base/models.js')
+script(src='/js/backbone/entities/_base/view.js')
+
+// backbone apps
+script(src='/js/backbone/apps/header/header_app.js')
+script(src='/js/backbone/apps/header/show/show_controller.js')
+script(src='/js/backbone/apps/header/show/show_view.js')
+
+// backbone init
+script(src='/js/backbone/init.js')
+
+// other js files
 script(src='/js/bootstrap.min.js')
 script(src='/js/bootbox.js')
 script(src='/js/jquery.tagsinput.min.js')
 script(src='/js/app.js')
-script(src='/socket.io/socket.io.js')
 script(src='/js/ui.js')
 script(src='/js/chart-internal.js')
+
 script.
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-25468002-1']);
