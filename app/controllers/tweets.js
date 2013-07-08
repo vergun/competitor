@@ -43,7 +43,6 @@ exports.getChartData = function(req, res, next, query) {
     Tweet.list(options, function(err, tws) {
             
       if (err) return next(err);  
-      if (tws.length) {
                                
         var graphData = chartsHelper.formatGraphData( d.colors, tws, d.labels, chartsHelper.addColorsToGraphData )
           , data = [];
@@ -57,11 +56,10 @@ exports.getChartData = function(req, res, next, query) {
         
         req.chartData = data;
         req.tweets = tws.slice(0, 19)
-        req.since = tws[0].id_str;
+        req.since = (tws.length) ? tws[0].id_str : ""
                 
         next()
           
-        }
     });
   }
 }
@@ -85,8 +83,6 @@ exports.index = function(req, res){
       
     Tweet.list(options, function(err, tws) {
       if (err) return next(err)
-      if(tws.length) {
-        
         var graphData = chartsHelper.formatGraphData( d.colors, tws, d.labels, chartsHelper.addColorsToGraphData )
           , arrayOfTweetsSource = _.map(_(tws).countBy('source'), function (value, key) { return [key, value] })
           , arrayOfTweetsLanguage = _.map(_(tws).countBy('lang'), function (value, key) { return [key, value] });
@@ -97,14 +93,10 @@ exports.index = function(req, res){
           , displayedTweets: tws.slice(0, 10)
           , lang: _.sortBy(arrayOfTweetsLanguage, function (t) { return t[1] }).reverse()
           , source: _.sortBy(arrayOfTweetsSource, function (t) { return t[1] }).reverse()
-          , since: _(tws).sortBy('id')[0].id
+          , since: (tws.length) ? tws[0].id_str : ""
           , user: d.user
-          })
-          
-        } else {
-          //todo provide in view an empty view not just Loading
-          res.render('tweets/_index_empty', {});
-        }
+          })      
+          // res.render('tweets/_index_empty', {});
     }) 
   } else {
     res.render('index', {
