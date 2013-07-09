@@ -1,4 +1,4 @@
-@Competitor.module "CompetitorApp.Show", (Show, App, Backbone, Mariontte, $, _) ->
+@Competitor.module "FooterApp.Show", (Show, App, Backbone, Mariontte, $, _) ->
   
   Show.Controller =
     
