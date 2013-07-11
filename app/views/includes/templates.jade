@@ -1,0 +1,10 @@
+script(src='/js/vendor/jquery.js')
+script(src='/js/vendor/jquery-ui.js')
+script(src='/js/vendor/underscore.js')
+script(src='/js/vendor/backbone.js')
+script(src='/js/vendor/marionette.js')
+script(src='/socket.io/socket.io.js')
+script#my-template(type='template').
+  <% _.each(items, function(item){ %>
+    Foo is: <%= address %>
+  <% }); %>

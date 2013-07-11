@@ -20,6 +20,9 @@ var express = require('express')
   // Load configurations
   // if test env, load example file
   
+/* ==== Make jade templates available in browsers via javascript template functions ==== */
+var templatizer = require('templatizer');
+templatizer(config.root + '/app/views/templates', config.root + '/public/js/backbone/templates.js');
 
 // Bootstrap db connection
 mongoose.connect(config.db)

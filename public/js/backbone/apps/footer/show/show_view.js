@@ -13,7 +13,15 @@
         return _ref;
       }
 
-      Footer.prototype.template = "footer/show/templates/show_footer";
+      Footer.prototype.template = templatizer.test;
+
+      Footer.prototype.initialize = function() {
+        return this.listenTo(this.model, "change", this.modelChanged);
+      };
+
+      Footer.prototype.modelChanged = function(model) {
+        return console.log(model);
+      };
 
       Footer.prototype.modelEvents = {
         "change": "render"

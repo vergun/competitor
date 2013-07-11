@@ -30,6 +30,7 @@
     "imager": "latest",
     "notifier": "latest",
     "underscore": "latest",
+    "templatizer": "latest",
     "gzippo": "latest",
     "async": "latest",
     "view-helpers": "latest",
@@ -37,9 +38,9 @@
     "ntwitter": "0.5.0",
     "socket.io": "latest",
     "moment": "latest",
+    "time": "latest",
     "mixpanel": "latest",
     "cron": "latest",
-    "time": "latest",
     "coffee-script": "latest"
   },
   "devDependencies": {

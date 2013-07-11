@@ -31,13 +31,11 @@
     })(Entities.Collection);
     API = {
       getFooters: function() {
-        return new Entities.FooterCollection([
-          {
-            copyrightyear: "MMXIII",
-            text: ". ALL RIGHTS RESERVED. CONTACT US AT HELP@INSTOREDOES.COM.",
-            brand: "OWN GROUP, INC"
-          }
-        ]);
+        return new Entities.Footer({
+          copyrightyear: "MMXIII",
+          text: ". ALL RIGHTS RESERVED. CONTACT US AT HELP@INSTOREDOES.COM.",
+          brand: "OWN GROUP, INC"
+        });
       }
     };
     return App.reqres.setHandler("get:footer:text", function() {
