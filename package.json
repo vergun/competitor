@@ -41,7 +41,8 @@
     "time": "latest",
     "mixpanel": "latest",
     "cron": "latest",
-    "coffee-script": "latest"
+    "coffee-script": "latest",
+    "node-sass": "latest"
   },
   "devDependencies": {
     "supertest": "latest",

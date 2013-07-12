@@ -32,7 +32,7 @@ var defaults = {
            ,  ctotal = defaults.total
            ,  cp = (Math.round(((ckey/ctotal)*100) * 10) / 10);
            
-            $('.' + cstr + '.chart').css("width", cp + '%');
+            $('.' + cstr + '.meter').css("width", cp + '%');
             $('.' + cstr + ' span.number').text(ckey);
             $('.' + cstr + ' span:not(".number")').text(cp + '%');
             
@@ -65,6 +65,9 @@ var defaults = {
         }
       }
     , setup = {
+        addPanelClass: function() {
+          // analytics.addClass('panel')
+        },
         header: function() {
           var header = $('#tracking');
           console.log(defaults.keywords);
@@ -73,19 +76,16 @@ var defaults = {
         analytics: function() {
           
           for (var i = 0; i < defaults.keywords.length; i++) {
-             analytics.prepend('<li>' + defaults.keywords[i] + '<span class="' + 
-                primitive_types.prepare_string(defaults.keywords[i]) + 
-                ' chart"></span></li>'
-              ) 
-          }
-          
-          
-          
-          for (var i = 0; i < defaults.keywords.length; i++) {
-             analytics.prepend('<ul class="inline-list"><li class="' + 
+             analytics.prepend('<ul class="inline-list ' + primitive_types.prepare_string(defaults.keywords[i]) + '"' 
+                + '><li class="' + 
                 primitive_types.prepare_string(defaults.keywords[i]) + 
                 '">' + defaults.keywords[i] + 
-                '</li><li><span class="number">0</span></li><li><span>0%</span></li></ul>'
+                '</li><li><span class="number">0</span></li><li><span>0%</span></li></ul>' + 
+                '<div class="progress small-12 radius"><span class="meter' 
+                + ' ' 
+                + primitive_types.prepare_string(defaults.keywords[i])
+                + '" style="width: 40%"></span></div>'
+                
               ) 
           }
           
@@ -99,6 +99,7 @@ var defaults = {
     })
     socket.on('keywords', function(keywords) {
       if (!defaults.keywords.length) {
+        setup.addPanelClass();
         setup.keywords(keywords);
         setup.analytics();
         setup.header();

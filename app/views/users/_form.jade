@@ -1,44 +1,33 @@
 - var action = '/users'
 - action += user.isNew? '' : '/' + user.id + '/update'
 
-form.offset1.form-horizontal(action=action, method="post")
-  input(type='hidden', name='_csrf', value="#{csrf_token}")
-  .control-group
-    label.control-label(for='name') Full name
-    .controls
-      input#name(type='text', name="name", placeholder='Full name', value=user.name)
-
-  .control-group
-    label.control-label(for='email') Email
-    .controls
+form(action=action, method="post")
+  .row
+    .small-6.columns
+      input(type='hidden', name='_csrf', value="#{csrf_token}")
+      input#name(type='text', name="name", placeholder='First name', value=user.name)
+    .small-6.columns
+      input#name(type='text', name="name", placeholder='Last name', value=user.name)
+  .row
+    .small-12.columns
       input#email(type='text', name="email", placeholder='Email', value=user.email)
-
-  .control-group
-    label.control-label(for='username') Username
-    .controls
-      input#username(type='text', name="username", placeholder='Username', value=user.username)
-
-  .control-group
-    label.control-label(for='password') Password
-    .controls
+  .row
+    .small-12.columns
       input#password(type='password', name="password", placeholder='Password')
-        
-  .control-group
-    label.control-label(for='keywords') Competitors
-    .controls
-      input#competitors(type='text', name="keywords", placeholder='Competitors', value=user.keywords)
-  p Separate competitors with commas, e.g.: "Five Guys, FastFries, Bob's Burger"
-  
+  .row
+    .small-12.columns
+      input#competitors.has-tip.tip-right(type='text', name="keywords", placeholder='Competitors', value=user.keywords, title='Separate competitors with commas. Example: "Five Guys, FastFries, Bobs Burger"', data-tooltip)  
     
-  if user.isNew    
-    p By clicking Sign Up, you agree to our Terms and that you have read our Data Use Policy, including our Cookie Use.
-    
+  if user.isNew        
     .form-actions
       button.btn.btn-primary(type='submit') Sign up
+      
+    p By clicking Sign Up, you agree to our Terms and that you have read our Data Use Policy, including our Cookie Use.
+    
   else 
     .form-actions
       button.btn.btn-primary(type='reset') Reset
       button.btn.btn-primary(type='submit') Update
       a(href="/users/"+req.user.id, title="Cancel") Cancel
       
-  p.offset2.error= errors
+  include ../includes/_errors

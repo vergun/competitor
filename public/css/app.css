@@ -22,11 +22,8 @@ body {
   border: 0;
 }
 
-ul.analytics { width: 75% }
-ul.analytics { list-style-type: none } 
-ul.analytics li span.chart  { display: block; width: 1; background: gray; color: black}
-ul.analytics li span.number { color: white }
-ul.analytics li span:not(.number) { float: right; display: inline-block; background: blue; color: #fff }
+ul.analytics { width: 75%; list-style-type:none; }
+ul.analytics li span.chart  { display: block; width: 1; background-color: red; background:red; color: black}
 ul.tweets { list-style-type: none } 
 ul.tweets li { background: #efefef; }
 ul.tweets li:nth-child(odd) { background: #fff; }

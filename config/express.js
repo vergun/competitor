@@ -8,6 +8,7 @@ var express = require('express')
   , flash = require('connect-flash')
   , helpers = require('view-helpers')
   , pkg = require('../package.json')
+  , sass = require('node-sass')
 
 module.exports = function (app, config, passport) {
 
@@ -20,6 +21,13 @@ module.exports = function (app, config, passport) {
     },
     level: 9
   }))
+  
+  app.use(sass.middleware({ //todo not working
+       src: config.root + '/public/sass', //where the sass files are 
+       dest: config.root + '/public', //where css should go
+       debug: true // obvious
+    })
+  )
 
   app.use(express.favicon())
   app.use(express.static(config.root + '/public'))
