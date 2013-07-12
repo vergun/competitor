@@ -2,12 +2,6 @@
  * Module dependencies.
  */
 
-/**
- * Main application entry file.
- * Please note that the order of loading is important.
- */
-
-
 var express = require('express')
   , http = require('http')
   , fs = require('fs')
@@ -21,8 +15,8 @@ var express = require('express')
   // if test env, load example file
   
 /* ==== Make jade templates available in browsers via javascript template functions ==== */
-var templatizer = require('templatizer');
-templatizer(config.root + '/app/views/templates', config.root + '/public/js/backbone/templates.js');
+// var templatizer = require('templatizer');
+// templatizer(config.root + '/app/views/templates', config.root + '/public/js/backbone/templates.js');
 
 // Bootstrap db connection
 mongoose.connect(config.db)

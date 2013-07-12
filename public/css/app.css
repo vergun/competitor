@@ -23,7 +23,8 @@ body {
 }
 
 ul.analytics { width: 75% }
-ul.analytics li { display: block; width: 0; background: blue; color: black}
+ul.analytics { list-style-type: none } 
+ul.analytics li span.chart  { display: block; width: 1; background: gray; color: black}
 ul.analytics li span.number { color: white }
 ul.analytics li span:not(.number) { float: right; display: inline-block; background: blue; color: #fff }
 ul.tweets { list-style-type: none } 

@@ -9,10 +9,16 @@ var defaults = {
   jQuery(function($) {
     var tweetList = $('ul.tweets.streaming')
       , analytics = $('ul.analytics')
+      , firstField = $('input#email-login')
+      , login = {
+        addFocus: function() {
+          if (firstField.length) firstField.focus();
+        }
+      }
       , tweet = {
       prependTweet: function(data) {
         var content = '<li><img src=' + data.avatar + ' />' + data.user + ': ' + data.text +  '</li>'
-        tweetList.prepend(content);
+        tweetList.prepend(content); //todo remove tweets from bottom of the list
       },
       updateTotal: function(data) {
         defaults.total++;
@@ -26,7 +32,7 @@ var defaults = {
            ,  ctotal = defaults.total
            ,  cp = (Math.round(((ckey/ctotal)*100) * 10) / 10);
            
-            $('.' + cstr).css("width", cp + '%');
+            $('.' + cstr + '.chart').css("width", cp + '%');
             $('.' + cstr + ' span.number').text(ckey);
             $('.' + cstr + ' span:not(".number")').text(cp + '%');
             
@@ -49,26 +55,48 @@ var defaults = {
         },
         change_white_space_to_hyphens: function(string) {
           return string.replace(/ /g, '-');
+        },
+        styleKeyword: function(keywords) {
+          var holder = "";
+          for ( var i=0; i < keywords.length; i+=1 ) {
+            holder += "<span class='radius secondary label'>" + keywords[i] + "</span>"
+          }
+          return holder;
         }
       }
     , setup = {
         header: function() {
           var header = $('#tracking');
-          header.text("Tracking: " + defaults.keywords.toString()); 
+          console.log(defaults.keywords);
+          header.html("<h2>Competitive Intelligence</h2><h3 class='subheader'>Stay informed on your competition</h3><p>Live example: Tracking " + primitive_types.styleKeyword(defaults.keywords) +  "</p>"); 
         }, 
         analytics: function() {
+          
           for (var i = 0; i < defaults.keywords.length; i++) {
-             analytics.prepend('<li class="' + 
+             analytics.prepend('<li>' + defaults.keywords[i] + '<span class="' + 
                 primitive_types.prepare_string(defaults.keywords[i]) + 
-                '">' + defaults.keywords[i] + 
-                ':<span class="number">0</span><span>0%</span></li>'
+                ' chart"></span></li>'
               ) 
           }
+          
+          
+          
+          for (var i = 0; i < defaults.keywords.length; i++) {
+             analytics.prepend('<ul class="inline-list"><li class="' + 
+                primitive_types.prepare_string(defaults.keywords[i]) + 
+                '">' + defaults.keywords[i] + 
+                '</li><li><span class="number">0</span></li><li><span>0%</span></li></ul>'
+              ) 
+          }
+          
         },
         keywords: function(keywords) {  
           defaults.keywords = keywords.keywords;
         }
       }
+    socket.on('connect', function() {
+      login.addFocus();
+    })
     socket.on('keywords', function(keywords) {
       if (!defaults.keywords.length) {
         setup.keywords(keywords);

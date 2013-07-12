@@ -9,9 +9,10 @@ block content
     input(name='document[id]', value=since, type='hidden', id='chart-since')
     include tweets/index
         
-  - if (!req.isAuthenticated())
-    ul.pull-right
-      include users/signup
-      
-    ul.pull-left
-      include tweets/_frontpage
+  - if (!req.isAuthenticated())  
+    .row
+      .small-6.columns
+        include tweets/_frontpage
+      .small-4.small-offset-2.columns
+        include users/_signup
+ 
