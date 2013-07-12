@@ -25,7 +25,7 @@ dl.sub-nav
   dd
     a |
   dd
-    a.update-chart(href='#', data-reveal-id='date-modal') Date range
+    a(href='#', data-reveal-id='date-modal') Date range
   
 .current-chart
   canvas#myChart
@@ -34,19 +34,25 @@ dl.sub-nav
     br
     .chartBox(style= "background-color:" + dataPoint.color + "; display:inline-block")
     span= dataPoint.keyword + " (" + dataPoint.value + " tweets  " + dataPoint.percentage + "%)"
-
+        
 hr
+h3.subheader Individual tweets
 ul.tweets
   each tweet in displayedTweets
     li.tweet 
-      img(src=tweet.user.profile_image_url)
-      span.user-screen-name=tweet.user.screen_name 
-      span.user-name=tweet.user.name
-      span.text= tweet.text
-      span.keywords Tracked by: #{tweet.keywords}
-      span.lang= tweet.lang
-      span.source= tweet.source
-      span.user-friends-count=tweet.user.friends_count + " Friends"
+      .row
+        .small-3.columns
+          img(src=tweet.user.profile_image_url)
+        .small-8.columns
+          h6
+            a.user-name(href='http://www.twitter.com/#{tweet.user.screen_name}', target='_blank')=tweet.user.name + " said:" 
+          span.text= tweet.text 
+        hr
+        // 
+          span.keywords Tracked by: #{tweet.keywords}
+          span.lang= tweet.lang
+          span.source= tweet.source
+          span.user-friends-count=tweet.user.friends_count + " Friends"
       
   if (pages > 1)
     .pagination

@@ -89,12 +89,19 @@
     
     //click 'go' on datepicker or new chart
     getChart: function() {
-      
-      $(document).delegate('#submit-date-range, .update-chart', 'click', function(e){
+      $(document).delegate('.update-chart', 'click', function(e){
         UI.showLoading();
         UI.getData(e, "totals");
       })
       
+    },
+    
+    setDates: function() {
+      $(document).delegate('#submit-date-range', 'click', function(e) {
+        UI.showLoading();
+        $('.close-reveal-modal').click();
+        UI.getData(e, "totals");
+      })
     },
     
     getTweetsPaginate: function() {
@@ -112,8 +119,10 @@
     },
     
     removeLoading: function() {
-      var loading = $('.alert-box')
-      loading.remove();
+      var loading = $('.alert-box');
+      loading.each(function() {
+        $(this).find('a').click();
+      })
     },
     
     getData: function ( e, context ) {
@@ -212,20 +221,14 @@
     }
     
   }
-  // .current-chart-legend
-  //   each dataPoint in chartData
-  //     br
-  //     .chartBox(style= "background-color:" + dataPoint.color + "; display:inline-block")
-  //     span= dataPoint.keyword + " (" + dataPoint.value + " tweets  " + dataPoint.percentage + "%)"
   
 
   
   Charts.setupFirstChart();
   UI.setupElements();
   UI.getChart();
+  UI.setDates();
   UI.groupChart();
   UI.groupKeywords();
-  // UI.groupRadial();
-  // UI.groupToggle();
   
 });

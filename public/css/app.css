@@ -1,47 +1,11 @@
-body {
-  padding-top: 60px;
-}
-
-.container {
-  width: auto;
-  max-width: 680px;
-}
-
-.article, .comment {
-  padding: 15px 0;
-  border-top: 1px solid #e8e8e8;
-}
-
-
 .error {
   color: #FF2602;
 }
-
-.form-actions {
-  background: #fff;
-  border: 0;
-}
+p.offset2.message {color:green;}
 
 .alert-box { text-align: center;}
-
-ul.analytics { width: 75%; list-style-type:none; }
-ul.tweets { list-style-type: none } 
-p.offset2.message {color:green;}
+ul.analytics, ul.tweets { list-style-type:none; }
 canvas#myChart, canvas#myChart2, canvas#myChart3 { width: 400px; height: 400px;}
-
-.progress-meter .background {
-  fill: #ccc;
-}
-
-.progress-meter .foreground {
-  fill: #000;
-}
-
-.progress-meter text {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 24px;
-  font-weight: bold;
-}
 
 .chartBox {
   width: 20px;
@@ -49,8 +13,4 @@ canvas#myChart, canvas#myChart2, canvas#myChart3 { width: 400px; height: 400px;}
 }
 .chartBox span {
   display:inline;
-}
-
-button.selected {
-  color: blue;
 }
