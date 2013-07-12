@@ -22,6 +22,8 @@ body {
   border: 0;
 }
 
+.alert-box { text-align: center;}
+
 ul.analytics { width: 75%; list-style-type:none; }
 ul.tweets { list-style-type: none } 
 p.offset2.message {color:green;}

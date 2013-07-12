@@ -1,27 +1,27 @@
 #footer-region
-
+  
 h2#tweets-total= tweets.length + " Tweets"
 h4.subheader Tracking keywords
 
 dl.sub-nav
   dt Filter:
   each keyword in keywords
-    dd.active
-      a.update-keyword.group-toggle.selected(href='#')= keyword
+    dd.active.update-keyword(data-keyword= keyword)
+      a.keyword-types(href='#')= keyword
   dd
     a |
-  dd.active
-    a.update-chart.chart-types(data-chart='Pie', href='#') Pie
-  dd
-    a.update-chart.chart-types(data-chart='Doughnut', href='#') Doughnut
-  dd
-    a.update-chart.chart-types(data-chart='Pie', href='#') Polar area
-  dd
-    a.update-chart.chart-types(data-chart='Pie', href='#') Bar
-  dd
-    a.update-chart.chart-types(data-chart='Pie', href='#') Line
-  dd
-    a.update-chart.chart-types(data-chart='Pie', href='#') Radar
+  dd.active(data-chart='Pie')
+    a.update-chart.chart-types(href='#') Pie
+  dd(data-chart='Doughnut')
+    a.update-chart.chart-types(href='#') Doughnut
+  dd(data-chart='PolarArea')
+    a.update-chart.chart-types(href='#') Polar area
+  dd(data-chart='Bar')
+    a.update-chart.chart-types(href='#') Bar
+  dd(data-chart='Line')
+    a.update-chart.chart-types(href='#') Line
+  dd(data-chart='Radar')
+    a.update-chart.chart-types(href='#') Radar
   dd
     a |
   dd
