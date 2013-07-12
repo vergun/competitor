@@ -1,40 +1,39 @@
 #footer-region
 
-h1#tweets-total= tweets.length + " Tweets"
-hr
+h2#tweets-total= tweets.length + " Tweets"
+h4.subheader Tracking keywords
 
-h2 Tracking
-  Tracking
+dl.sub-nav
+  dt Filter:
   each keyword in keywords
-    button.update-keyword.group-toggle.selected(data-keyword=keyword)=keyword
-    
-h4
-  a(href='/users/' + user.id) To edit your keywords click here
-  h2 Date range
-  .date-range
-    label(for="from") From
-    input#from(type="text", name="from")
-    label(for="to") to
-    input#to(type="text", name="to")
-    button#submit-date-range Go
+    dd.active
+      a.update-keyword.group-toggle.selected(href='#')= keyword
+  dd
+    a |
+  dd.active
+    a.update-chart.chart-types(data-chart='Pie', href='#') Pie
+  dd
+    a.update-chart.chart-types(data-chart='Doughnut', href='#') Doughnut
+  dd
+    a.update-chart.chart-types(data-chart='Pie', href='#') Polar area
+  dd
+    a.update-chart.chart-types(data-chart='Pie', href='#') Bar
+  dd
+    a.update-chart.chart-types(data-chart='Pie', href='#') Line
+  dd
+    a.update-chart.chart-types(data-chart='Pie', href='#') Radar
+  dd
+    a |
+  dd
+    a.update-chart(href='#', data-reveal-id='date-modal') Date range
   
-  br
-  h2 Chart type
-  .chart-types
-    button.update-chart.group-radial.selected(data-chart="Pie") Pie
-    button.update-chart.group-radial(data-chart="Doughnut") Doughnut
-    button.update-chart.group-radial(data-chart="PolarArea") Polar area
-    button.update-chart.group-radial(data-chart="Bar") Bar
-    button.update-chart.group-radial(data-chart="Line") Line
-    button.update-chart.group-radial(data-chart="Radar") Radar
-  .current-chart
-    canvas#myChart
-  .current-chart-legend
-    each dataPoint in chartData
-      br
-      .chartBox(style= "background-color:" + dataPoint.color + "; display:inline-block")
-      span= dataPoint.keyword + " (" + dataPoint.value + " tweets  " + dataPoint.percentage + "%)"
-  
+.current-chart
+  canvas#myChart
+.current-chart-legend
+  each dataPoint in chartData
+    br
+    .chartBox(style= "background-color:" + dataPoint.color + "; display:inline-block")
+    span= dataPoint.keyword + " (" + dataPoint.value + " tweets  " + dataPoint.percentage + "%)"
 
 hr
 ul.tweets
