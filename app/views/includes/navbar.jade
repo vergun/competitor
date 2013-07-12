@@ -1,0 +1,6 @@
+- if (req.isAuthenticated())
+  include _nav
+              
+- if (!req.isAuthenticated())
+  block auth
+  include ../users/_login

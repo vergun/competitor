@@ -1,5 +1,4 @@
-jQuery.ready(function ($) {
-
+jQuery(function ($) {
   // confirmations
   $('.confirm').submit(function (e) {
     e.preventDefault();

@@ -1,10 +1,49 @@
-li
-  a(href="/", title="Home") Home
-li
-  a(href="/explore", title="Explore") Explore
-li
-  a(href="/activity", title="Activity") Activity
-li
-  a(href="/users/"+req.user.id, title="Profile") Profile
-li
-  a(href="/logout", title="logout") Logout
+
+nav.top-bar(data-options='is_hover:true')
+    ul.title-area
+      section.top-bar-section
+        //
+           Left Nav Section 
+        ul.left
+          li.has-dropdown
+            a(href='#') Competitors
+            ul.dropdown
+              li.divider.hide-for-small
+              li
+                a(href='#') McDonalds
+              li.divider
+              li
+                a(href='#') Edit Competitors
+          li.divider
+          li.active
+            a(href='/') Home
+          li.divider
+          li
+            a(href='/explore') Explore
+          li.divider
+          li
+            a(href='/activity') Activity
+          li.divider
+         
+        //
+           Right Nav Section 
+        ul.right
+          li.divider.hide-for-small
+          li.has-form
+            form
+              .row.collapse
+                .small-8.columns
+                  input(type='text', placeholder='Search live...')
+                .small-4.columns
+                  a.alert.button(href='#') Search 
+          li.divider
+          li.has-dropdown
+            a(href='#') Profile
+            ul.dropdown
+              li.divider.hide-for-small
+              li
+                label Your profile
+              li
+                a(href='/users/'+req.user.id) Edit Profile
+              li
+                a(href='/logout') Logout

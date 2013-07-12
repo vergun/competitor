@@ -10,7 +10,7 @@ var jade=function(exports){Array.isArray||(Array.isArray=function(arr){return"[o
 exports.test = function anonymous(locals) {
     var buf = [];
     with (locals || {}) {
-        buf.push("<h1>Hello<p>This is great</p><h2>" + jade.escape(null == (jade.interp = copyrightyear) ? "" : jade.interp) + "</h2><h2>" + jade.escape(null == (jade.interp = text) ? "" : jade.interp) + "</h2><h2>" + jade.escape(null == (jade.interp = brand) ? "" : jade.interp) + "</h2></h1>");
+        buf.push("<h1>Hello<p>This is great</p></h1>");
     }
     return buf.join("");
 };
