@@ -5,9 +5,9 @@ form(action=action, method="post")
   .row
     .small-6.columns
       input(type='hidden', name='_csrf', value="#{csrf_token}")
-      input#name(type='text', name="name", placeholder='First name', value=user.name)
+      input#name(type='text', name="first_name", placeholder='First name', value=user.first_name)
     .small-6.columns
-      input#name(type='text', name="name", placeholder='Last name', value=user.name)
+      input#name(type='text', name="last_name", placeholder='Last name', value=user.last_name)
   .row
     .small-12.columns
       input#email(type='text', name="email", placeholder='Email', value=user.email)

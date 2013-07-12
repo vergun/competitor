@@ -77,6 +77,7 @@ exports.session = function (req, res) {
 exports.create = function (req, res) {
       
   var user = new User(req.body);
+  console.log(user)
   user.save(function (err, data) {
     if (err) { 
       // pass errors in // todo // 
@@ -101,7 +102,7 @@ exports.create = function (req, res) {
 exports.show = function (req, res) {
   var user = req.profile
   res.render('users/show', {
-    title: user.name,
+    title: user.first_name,
     user: user
   })
 }
@@ -113,7 +114,7 @@ exports.show = function (req, res) {
 exports.edit = function (req, res) {
   var user = req.profile
   res.render('users/edit', {
-    title: "Edit " + user.name,
+    title: "Edit " + user.first_name,
     user: user
   })
 }
@@ -128,7 +129,7 @@ exports.update = function(req, res){
   user.save(function (err, data, cb) {
     if (!err) {
       res.render('users/show', {
-        title: user.name,
+        title: user.first_name,
         message: 'User was successfully updated.',
         user: user
       })
@@ -137,7 +138,7 @@ exports.update = function(req, res){
     }
     if (err) {
       res.render('users/edit', {
-        title: 'Edit ' + req.user.username,
+        title: 'Edit ' + req.user.first_name,
         user: req.user,
         errors: err
       })

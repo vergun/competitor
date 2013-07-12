@@ -32,9 +32,9 @@ var mongoose = require('mongoose')
  */
 
 var UserSchema = new Schema({
-  name: String,
+  first_name: String,
+  last_name: String,
   email: String,
-  username: String,
   keywords: {type: [], get: getKeywords, set: setKeywords},
   plan: String,
   hashed_password: String,
@@ -71,9 +71,13 @@ var validatePresenceOf = function (value) {
 
 // the below 4 validations only apply if you are signing up traditionally
 
-UserSchema.path('name').validate(function (name) {
+UserSchema.path('first_name').validate(function (name) {
   return name.length
-}, 'Name cannot be blank')
+}, 'First name cannot be blank')
+
+UserSchema.path('last_name').validate(function (name) {
+  return name.length
+}, 'Last name cannot be blank')
 
 UserSchema.path('email').validate(function (email) {
   return email.length
@@ -93,10 +97,6 @@ UserSchema.path('email').validate(function (email, fn) {
     })
   } else fn(true)
 }, 'Email already exists')
-
-UserSchema.path('username').validate(function (username) {
-  return username.length
-}, 'Username cannot be blank')
 
 UserSchema.path('hashed_password').validate(function (hashed_password) {
   return hashed_password.length

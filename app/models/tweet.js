@@ -108,7 +108,7 @@ TweetSchema.statics = {
 
   load: function (id, cb) {
     this.findOne({ _id : id })
-      .populate('user', 'name email username')
+      .populate('user', 'name email')
       .populate('comments.user')
       .exec(cb)
   },

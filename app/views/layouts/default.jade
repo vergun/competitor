@@ -4,12 +4,13 @@ html(lang='en', xmlns='http://www.w3.org/1999/xhtml', xmlns:fb='https://www.face
   include ../includes/_header
   body
     include ../includes/_nav 
-    block main
-    include ../includes/_messages
-    block content
     .row
-      p Copyright 2013 Instore 
-    include ../includes/_footer
+      block main
+      include ../includes/_messages
+      block content
+      .row
+        p Copyright 2013 Instore 
+      include ../includes/_footer
 
 
   
