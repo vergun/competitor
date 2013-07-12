@@ -23,10 +23,7 @@ body {
 }
 
 ul.analytics { width: 75%; list-style-type:none; }
-ul.analytics li span.chart  { display: block; width: 1; background-color: red; background:red; color: black}
 ul.tweets { list-style-type: none } 
-ul.tweets li { background: #efefef; }
-ul.tweets li:nth-child(odd) { background: #fff; }
 p.offset2.message {color:green;}
 canvas#myChart, canvas#myChart2, canvas#myChart3 { width: 400px; height: 400px;}
 

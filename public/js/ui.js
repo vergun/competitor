@@ -16,8 +16,23 @@ var defaults = {
         }
       }
       , tweet = {
+      removeTweets: function() {
+        var limit = 5
+          , list = tweetList.children('li:gt(' + limit + ')');
+        list.remove();     
+      },
       prependTweet: function(data) {
-        var content = '<li><img src=' + data.avatar + ' />' + data.user + ': ' + data.text +  '</li>'
+        var url = data.username 
+                ? '<a href="' + 'http://www.twitter.com/' + data.user + '">' + data.username + '</a>' 
+                : data.username
+        var content = '<li><div class="row"><div class="small-3 columns"><img src=' 
+                      + data.avatar 
+                      + ' /></div>' 
+                      + '<div class="small-8 columns"><h6>'
+                      + url
+                      + ' said: </h6>' 
+                      + data.text 
+                      +  '</div><hr></li>'
         tweetList.prepend(content); //todo remove tweets from bottom of the list
       },
       updateTotal: function(data) {
@@ -65,14 +80,19 @@ var defaults = {
         }
       }
     , setup = {
+        bindSubmit: function() {
+          $('#login-button').click(function() {
+            $('.login').submit();
+          })
+        },
         addPanelClass: function() {
           // analytics.addClass('panel')
         },
         header: function() {
           var header = $('#tracking');
-          console.log(defaults.keywords);
           header.html("<h2>Competitive Intelligence</h2><h3 class='subheader'>Stay informed on your competition</h3><p>Live example: Tracking " + primitive_types.styleKeyword(defaults.keywords) +  "</p>"); 
         }, 
+        // todo add pause/play feature
         analytics: function() {
           
           for (var i = 0; i < defaults.keywords.length; i++) {
@@ -96,6 +116,7 @@ var defaults = {
       }
     socket.on('connect', function() {
       login.addFocus();
+      setup.bindSubmit();
     })
     socket.on('keywords', function(keywords) {
       if (!defaults.keywords.length) {
@@ -109,5 +130,6 @@ var defaults = {
       tweet.updateAnalytics(data);
       tweet.updateNumbers(data, defaults.keywords, defaults.keywordsCounter);
       tweet.prependTweet(data);
+      tweet.removeTweets();
     });
 }); //jQuery

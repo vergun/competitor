@@ -5,6 +5,8 @@ module.exports = function(twit, config, io) {
     stream.on('data', function(data) {
       io.sockets.volatile.emit('tweet', {
         user: data.user.screen_name
+      , username: data.user.name
+      , userurl: data.user.url
       , avatar: data.user.profile_image_url
       , text: data.text
       });
