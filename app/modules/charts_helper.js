@@ -50,6 +50,7 @@ var query = query.split("&")
   , perPage = 30
   , page = (req.param('page') > 0 ? req.param('page') : 1) - 1 
   , dateArray = datesHelper.getDates(time_range[0], time_range[1], datesHelper.formatDate)
+  , formattedDates = datesHelper.formatDateForView(time_range)
   
   return {
     query: query
@@ -66,6 +67,7 @@ var query = query.split("&")
   , user: req.user
   , page: page
   , perPage: perPage
+  , formattedDates: formattedDates
   }
  
 }

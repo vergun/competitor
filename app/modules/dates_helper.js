@@ -37,6 +37,16 @@ exports.formatDate = function ( dateArray ) {
    
  }
  
+ exports.formatDateForView = function ( dateArray ) {
+   
+   var format = "";
+   if (dateArray == "") format = "Today"
+   if (dateArray != "") format = [moment(dateArray[0]).format('MMMM Do YYYY'), moment(dateArray[1]).format('MMMM Do YYYY') ]
+   format = format[0] + " – " + format[1]; 
+   return format;
+   
+ }
+ 
  exports.getTweetValuesByLabels = function( tws, labels ) {
    
    var format = ""

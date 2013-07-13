@@ -51,8 +51,9 @@ exports.getChartData = function(req, res, next, query) {
           }
         
         req.chartData = data;
-        req.tweets = tws.slice(0, 19)
-        req.since = (tws.length) ? tws[0].id_str : ""
+        req.tweets = tws.slice(0, 19);
+        req.since = (tws.length) ? tws[0].id_str : "";
+        req.formattedDates = d.formattedDates;
                 
         next()
           
@@ -106,7 +107,7 @@ exports.index = function(req, res){
 
 exports.chart = function(req, res){
   res.writeHead(200, {'content-type': 'text/json' });
-  res.write( JSON.stringify({ chartData: req.chartData, tweets: req.tweets, since: req.since }) );
+  res.write( JSON.stringify({ chartData: req.chartData, tweets: req.tweets, since: req.since, formattedDates: req.formattedDates }) );
   res.end('\n');
 }
 

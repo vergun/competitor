@@ -57,9 +57,10 @@
     },
     
     groupKeywords: function() {
-      $('.update-keyword').bind('click', function() {
-        console.log(this);
+      $('.update-keyword').bind('click', function(e) {
         $(this).toggleClass('active');
+        UI.showLoading();
+        UI.getData(e, "totals");
       })
     },
     
@@ -166,16 +167,30 @@
     },
     
     receivedChartData: function(dates, chart, keywords, data) { 
-      console.log(data);  
       var since = data.since
+        , formattedDates = data.formattedDates
         , data = data.chartData
         , chart = chart.split("=")[1]
+        , tweets = data.tweets
+        //todo replace tweets with tweets
+      
+        if (data.length) {
+          console.log(formattedDates);
+          Charts.replaceChart(dates, chart, keywords, data);
+          Charts.replaceChartLegend(chart, data);       
+          Charts.replaceTotalTweets(chart, data);  
+          Charts.replaceDates(formattedDates);
+          UI.setSince(since); 
+        }
+        
+        if (!data.length) {
+          Charts.replaceChart(dates, chart, keywords, data);
+          $('#myChart').html("<h2>No tweets found.</h2><h4 class='subheader'>Try adding keywords or searching a different time range.</h4>")
+          $('.current-chart-legend').html('');
+          $("#tweets-total").text(" No tweets found");
+        }
                   
-      Charts.replaceChart(dates, chart, keywords, data);
-      Charts.replaceChartLegend(chart, data);       
-      Charts.replaceTotalTweets(chart, data);  
-          
-      UI.setSince(since);      
+        
       UI.removeLoading();
       
     },
@@ -199,12 +214,12 @@
       if (chart === "Bar" || chart === "Line" || chart === "Radar") data = data.datasets;
       
       var container = $('.current-chart-legend')
-        , content = "<br />"
+        , content = ""
       
       $(data).each(function(index, dataPoint) {
         content = content 
-                + "<div class='chartBox', style='background-color:" + dataPoint.color + "; display:inline-block'></div>"
-                + "<span>" + dataPoint.keyword + " (" + dataPoint.value + " tweets  " + dataPoint.percentage + "%)" + "</span><br />";
+                + "<ul class='inline-list'><li class='chartBox', style='background-color:" + dataPoint.color + ";'></li>"
+                + "<li>" + dataPoint.keyword + "</li><li>" + dataPoint.value + " tweets</li><li>" + dataPoint.percentage + "%</li></ul>";
       });
             
       container.html(content);
@@ -217,7 +232,15 @@
       $.each(data, function(index, element) {
         total = total + element.value;
       });
-      $("#tweets-total").text(total + " Tweets");
+      $("#tweets-total").text(" " + total + " Tweets");
+    },
+    
+    replaceDates: function(formattedDates) {
+      $('.formatted-dates').each(function() {
+        var $tmp = $(this).children(':first').children().remove();
+        $(this).children(':first').text(formattedDates).append($tmp);
+      })
+      
     }
     
   }

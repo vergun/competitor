@@ -1,10 +1,13 @@
 #footer-region
-  
-h2#tweets-total= tweets.length + " Tweets"
-h4.subheader Tracking keywords
+
+p
+  .formatted-dates
+    h2.subheader
+      | Today
+      span#tweets-total= " " + tweets.length + " Tweets"
 
 dl.sub-nav
-  dt Filter:
+  dt Tracking keywords:
   each keyword in keywords
     dd.active.update-keyword(data-keyword= keyword)
       a.keyword-types(href='#')= keyword
@@ -15,7 +18,7 @@ dl.sub-nav
   dd(data-chart='Doughnut')
     a.update-chart.chart-types(href='#') Doughnut
   dd(data-chart='PolarArea')
-    a.update-chart.chart-types(href='#') Polar area
+    a.update-chart.chart-types(href='#') PolarArea
   dd(data-chart='Bar')
     a.update-chart.chart-types(href='#') Bar
   dd(data-chart='Line')
@@ -26,47 +29,71 @@ dl.sub-nav
     a |
   dd
     a(href='#', data-reveal-id='date-modal') Date range
-  
-.current-chart
-  canvas#myChart
-.current-chart-legend
-  each dataPoint in chartData
-    br
-    .chartBox(style= "background-color:" + dataPoint.color + "; display:inline-block")
-    span= dataPoint.keyword + " (" + dataPoint.value + " tweets  " + dataPoint.percentage + "%)"
-        
-hr
-h3.subheader Individual tweets
-ul.tweets
-  each tweet in displayedTweets
-    li.tweet 
-      .row
-        .small-3.columns
-          img(src=tweet.user.profile_image_url)
-        .small-8.columns
-          h6
-            a.user-name(href='http://www.twitter.com/#{tweet.user.screen_name}', target='_blank')=tweet.user.name + " said:" 
-          span.text= tweet.text 
-        hr
-        // 
-          span.keywords Tracked by: #{tweet.keywords}
-          span.lang= tweet.lang
-          span.source= tweet.source
-          span.user-friends-count=tweet.user.friends_count + " Friends"
+  dd.active.formatted-dates
+    a(href='#') Today
+    
+.row
+  .small-7.columns
+    h3.subheader Individual tweets
+    ul.tweets
+      each tweet in displayedTweets
+        li.tweet 
+          .row
+            .small-3.columns
+              img(src=tweet.user.profile_image_url)
+            .small-8.columns
+              h6
+                a.user-name(href='http://www.twitter.com/#{tweet.user.screen_name}', target='_blank')=tweet.user.name + " said:" 
+              span.text= tweet.text 
+            hr
+            // 
+              span.keywords Tracked by: #{tweet.keywords}
+              span.lang= tweet.lang
+              span.source= tweet.source
+              span.user-friends-count=tweet.user.friends_count + " Friends"
       
-  if (pages > 1)
-    .pagination
-      ul
-        != createPagination(pages, page)
+      if (pages > 1)
+        .pagination
+          ul
+            != createPagination(pages, page)
+  .small-5.columns
+    .section-container.tabs(data-section='tabs')
+        section
+            p.title(data-section-title='data-section-title')
+              a(href='#panel1') Graph
+            .content(data-section-content='data-section-content')
+              h4 Pie chart
+              h6.subheader Visualization of keywords over time
+              .current-chart
+                canvas#myChart
+              .current-chart-legend.panel
+                each dataPoint in chartData
+                  br
+                  .chartBox(style= "background-color:" + dataPoint.color + "; display:inline-block")
+                  span= dataPoint.keyword + " (" + dataPoint.value + " tweets  " + dataPoint.percentage + "%)"
+          section
+            p.title(data-section-title='data-section-title')
+              a(href='#panel2') Map
+            .content(data-section-content='data-section-content')
+              h4 Tweets by language
+              h6.subheader Showing language of tweets
+              ul.tweets
+                each val in lang
+                  li= val[0] + ": " + val[1] + " : " + (Math.round((val[1]/tweets.length)*100)).toString() + "%"
+          section
+            p.title(data-section-title='data-section-title')
+              a(href='#panel2') Source
+            .content(data-section-content='data-section-content')
+              h4 Tweets by source
+              h6.subheader Showing source of tweets
+              ul.tweets
+                each val in source
+                  - var html = "<li>" + val[0].charAt(0).toUpperCase() + val[0].slice(1) + ": " + val[1] + " : " + (Math.round((val[1]/tweets.length)*100)).toString() + "%" + "</li>"
+                  | !{html}
+              
+              
+
+ 
 
 
-h1 Tweets by language
-ul.tweets
-  each val in lang
-    li= val[0] + ": " + val[1] + " : " + (Math.round((val[1]/tweets.length)*100)).toString() + "%"
-
-h2 Tweets by source
-ul.tweets
-  each val in source
-    - var html = "<li>" + val[0].charAt(0).toUpperCase() + val[0].slice(1) + ": " + val[1] + " : " + (Math.round((val[1]/tweets.length)*100)).toString() + "%" + "</li>"
-    | !{html}
+        
