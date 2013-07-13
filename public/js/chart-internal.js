@@ -168,22 +168,23 @@
     
     receivedChartData: function(dates, chart, keywords, data) { 
       var since = data.since
+        , displayedTweets = data.displayedTweets
         , formattedDates = data.formattedDates
         , data = data.chartData
         , chart = chart.split("=")[1]
-        , tweets = data.tweets
-        //todo replace tweets with tweets
       
         if (data.length) {
-          console.log(formattedDates);
+          console.log(since); //todo fix
           Charts.replaceChart(dates, chart, keywords, data);
           Charts.replaceChartLegend(chart, data);       
           Charts.replaceTotalTweets(chart, data);  
           Charts.replaceDates(formattedDates);
+          Charts.replaceTweets(displayedTweets);
           UI.setSince(since); 
         }
         
         if (!data.length) {
+          console.log(displayedTweets);
           Charts.replaceChart(dates, chart, keywords, data);
           $('#myChart').html("<h2>No tweets found.</h2><h4 class='subheader'>Try adding keywords or searching a different time range.</h4>")
           $('.current-chart-legend').html('');
@@ -240,7 +241,30 @@
         var $tmp = $(this).children(':first').children().remove();
         $(this).children(':first').text(formattedDates).append($tmp);
       })
-      
+    },
+    
+    replaceTweets: function(displayedTweets) {
+      console.log(displayedTweets);
+      $('ul.tweets').html('');
+      for (var i=0; i<displayedTweets.length; i+=1) {
+        console.log(displayedTweets[i]);
+        $('ul.tweets').append(
+          '<li class="tweet">' 
+          + '<div class="row">'
+          + '<div class="small-3 columns">'
+          + '<img src="' + displayedTweets[i].user.profile_image_url + '">'
+          + '</div>'
+          + '<div class="small-8 columns">'
+          + '<h6>'
+          + '<a class="user-name" href="http://www.twitter.com/' + displayedTweets[i].user.screen_name + '" target="_blank">'
+          + displayedTweets[i].user.name + ' said:' + '</a>' 
+          + '</h6>'
+          + '<span class="text">' + displayedTweets[i].text + '</span>'
+          + '</div>'
+          + '<hr>'
+          + '</div>'
+          + '</li>')
+      }    
     }
     
   }
