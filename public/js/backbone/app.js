@@ -4,9 +4,11 @@
     var App;
     App = new Marionette.Application;
     App.addRegions({
+      headerRegion: "#header-region",
       footerRegion: "#footer-region"
     });
     App.addInitializer(function() {
+      App.module("HeaderApp").start();
       return App.module("FooterApp").start();
     });
     App.on("initialize:after", function() {

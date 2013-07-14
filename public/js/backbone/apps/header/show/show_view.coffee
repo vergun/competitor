@@ -1,7 +1,7 @@
-@Competitor.module "FooterApp.Show", (Show, App, backbone, Marionette, $, _) ->
+@Competitor.module "HeaderApp.Show", (Show, App, backbone, Marionette, $, _) ->
   
-  class Show.Footer extends App.Views.ItemView
-    template: templatizer.footer.footer
+  class Show.Header extends App.Views.ItemView
+    template: templatizer.header.header
     
     initialize: ->
       this.listenTo this.model, "change", this.modelChanged

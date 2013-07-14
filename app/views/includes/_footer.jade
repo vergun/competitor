@@ -1,12 +1,8 @@
-// lib
-//script(src='/js/bootstrap.min.js')
 script(src='/js/vendor/jquery.js')
 script(src='/js/vendor/jquery-ui.js')
 script(src='/js/vendor/modernizr.js')
-// script(src='/js/vendor/foundation.js')
-// script(src='/js/vendor/foundation.topbar.js')
-//templatizer
-// script(src='/js/backbone/templates.js')
+//templatizer : needed?
+script(src='/js/backbone/templates.js')
 script(src='/js/vendor/underscore.js')
 script(src='/js/vendor/backbone.js')
 script(src='/js/vendor/marionette.js')
@@ -14,41 +10,47 @@ script(src='/socket.io/socket.io.js')
 script(src='js/vendor/foundation.js')
 script.
   $(document).foundation();
-
-// backbone config
-// script(src='/js/backbone/config/marionette/application.js')
-// script(src='/js/backbone/config/marionette/renderer.js')
-
-// backbone app
-//script(src='/js/backbone/app.js')
-
-// backbone entities
-//script(src='/js/backbone/entities/_base/collections.js')
-//script(src='/js/backbone/entities/_base/collectionview.js')
-//script(src='/js/backbone/entities/_base/compositeview.js')
-//script(src='/js/backbone/entities/_base/itemview.js')
-//script(src='/js/backbone/entities/_base/layout.js')
-//script(src='/js/backbone/entities/_base/models.js')
-//script(src='/js/backbone/entities/_base/view.js')
-//script(src='/js/backbone/entities/footer.js')
-
-// backbone apps
-//script(src='/js/backbone/apps/footer/footer_app.js')
-//script(src='/js/backbone/apps/footer/show/show_controller.js')
-//script(src='/js/backbone/apps/footer/show/show_view.js')
-
-// backbone init
-//script(src='/js/backbone/init.js')
-
-// other js files
-// script(src='/js/bootstrap.min.js')
-// script(src='/js/bootbox.js')
 script(src='/js/jquery.tagsinput.min.js')
 script(src='/js/app.js')
 script(src='/js/ui.js')
-script(src='/js/chart-internal.js')
+// charts in-process porting to backbone
+// script(src='/js/chart-internal.js')
 
 
+// backbone
+
+// lib
+script(src='/js/vendor/jquery.js')
+script(src='/js/vendor/jquery-ui.js')
+script(src='/js/vendor/modernizr.js')
+script(src='/js/backbone/templates.js')
+script(src='/js/vendor/underscore.js')
+script(src='/js/backbone/config/marionette/application.js')
+// todo fix renderer
+// script(src='/js/backbone/config/marionette/renderer.js')
+script(src='/js/backbone/app.js')
+script(src='/js/backbone/entities/_base/collections.js')
+script(src='/js/backbone/entities/_base/collectionview.js')
+script(src='/js/backbone/entities/_base/compositeview.js')
+script(src='/js/backbone/entities/_base/itemview.js')
+script(src='/js/backbone/entities/_base/layout.js')
+script(src='/js/backbone/entities/_base/models.js')
+script(src='/js/backbone/entities/_base/view.js')
+script(src='/js/backbone/entities/header.js')
+script(src='/js/backbone/entities/footer.js')
+
+// header app
+script(src='/js/backbone/apps/header/header_app.js')
+script(src='/js/backbone/apps/header/show/show_controller.js')
+script(src='/js/backbone/apps/header/show/show_view.js')
+
+// footer app
+script(src='/js/backbone/apps/footer/footer_app.js')
+script(src='/js/backbone/apps/footer/show/show_controller.js')
+script(src='/js/backbone/apps/footer/show/show_view.js')
+
+// init
+script(src='/js/backbone/init.js')
 
 script.
   var _gaq = _gaq || [];

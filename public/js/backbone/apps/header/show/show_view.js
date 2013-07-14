@@ -3,31 +3,31 @@
   var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  this.Competitor.module("FooterApp.Show", function(Show, App, backbone, Marionette, $, _) {
+  this.Competitor.module("HeaderApp.Show", function(Show, App, backbone, Marionette, $, _) {
     var _ref;
-    return Show.Footer = (function(_super) {
-      __extends(Footer, _super);
+    return Show.Header = (function(_super) {
+      __extends(Header, _super);
 
-      function Footer() {
-        _ref = Footer.__super__.constructor.apply(this, arguments);
+      function Header() {
+        _ref = Header.__super__.constructor.apply(this, arguments);
         return _ref;
       }
 
-      Footer.prototype.template = templatizer.footer.footer;
+      Header.prototype.template = templatizer.header.header;
 
-      Footer.prototype.initialize = function() {
+      Header.prototype.initialize = function() {
         return this.listenTo(this.model, "change", this.modelChanged);
       };
 
-      Footer.prototype.modelChanged = function(model) {
+      Header.prototype.modelChanged = function(model) {
         return console.log(model);
       };
 
-      Footer.prototype.modelEvents = {
+      Header.prototype.modelEvents = {
         "change": "render"
       };
 
-      return Footer;
+      return Header;
 
     })(App.Views.ItemView);
   });
