@@ -38,11 +38,14 @@ exports.formatDate = function ( dateArray ) {
  }
  
  exports.formatDateForView = function ( dateArray ) {
-   
+   console.log("yeah");
    var format = "";
-   if (dateArray == "") format = "Today"
-   if (dateArray != "") format = [moment(dateArray[0]).format('MMMM Do YYYY'), moment(dateArray[1]).format('MMMM Do YYYY') ]
-   format = format[0] + " – " + format[1]; 
+   dateArray = [moment(dateArray[0]).startOf('day'), moment(dateArray[1]).startOf('day')]
+   console.log(dateArray[0]);
+   console.log(dateArray[1]);
+   // if (dateArray != "") format = [moment(dateArray[0]).format('MMMM Do YYYY'), moment(dateArray[1]).format('MMMM Do YYYY') ]
+   if (dateArray[0].format() != dateArray[1].format()) format = moment(dateArray[0]).calendar().split(' at')[0] + " to " + moment(dateArray[1]).calendar().split(' at')[0];
+   if (dateArray[0].format() == dateArray[1].format()) format = moment(dateArray[0]).fromNow()
    return format;
    
  }

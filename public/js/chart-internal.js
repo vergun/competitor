@@ -34,17 +34,6 @@
         value: 37
       });
     },
-     
-    // only one selection elements
-    // groupRadial: function() {
-    //   $('.group-radial').bind('click', function() {
-    //     $(this).siblings().each(function() {
-    //       $(this).removeClass('selected');
-    //     })
-    //     $(this).addClass('selected');
-    //   })
-    // },
-    
     
     groupChart: function() {
       $('.chart-types').bind('click', function() {
@@ -158,6 +147,21 @@
     
     //initial chart
     
+    bindRemoveFormattedDatesCancelButton: function() {
+      $('#cancel-remove-date-filter').bind('click', function() {
+        $('.close-reveal-modal').click();
+      }),
+      
+      $('#remove-date-filter').bind('click', function() {
+        console.log('removed');
+      })
+      
+    },
+    
+    removeFormattedDates: function() {
+      $(document).on('click', '.formatted-dates')
+    },
+    
     setupFirstChart: function() {
       var ctx = document.getElementById("myChart").getContext("2d");
       new Chart(ctx).Pie(eval("(" + document.getElementById("chart-data").value + ")"), { animation: true } );  
@@ -173,6 +177,7 @@
               
         if (typeof data!='undefined') {
           console.log(since); //todo fix
+          //todo set source and language to update also
           Charts.replaceChart(dates, chart, keywords, data);
           Charts.replaceChartHeader(chart);
           Charts.replaceChartLegend(chart, data);       
@@ -186,7 +191,7 @@
           //Charts.replaceChart(dates, chart, keywords, data);
           $('#myChart').html("<h2>No tweets found.</h2><h4 class='subheader'>Try adding keywords or searching a different time range.</h4>")
           $('.current-chart-legend').html('<h6 class="subheader">No results found, try adding keywords or choosing a different date range.</h6>');
-          $("#tweets-total").text(" No tweets found");
+          $("#tweets-total").text("No tweets found");
           $(".tweets-list").html('<h6 class="subheader">No results found, try adding keywords or choosing a different date range.</h6>')
         }
                   
@@ -238,8 +243,12 @@
     replaceDates: function(formattedDates) {
       $('.formatted-dates').each(function() {
         var $tmp = $(this).children(':first').children().remove();
-        $(this).children(':first').text(formattedDates).append($tmp);
+        $(this).children(':first').text( formattedDates + "     " ).append($tmp); //todo change five spaces to &ensp;
       })
+    },
+    
+    addModalToDate: function() {
+      $('.active.formatted-dates').data('data-reveal-id', 'remove-date-modal') 
     },
     
     replaceChartHeader: function(chart) {
@@ -281,6 +290,7 @@
 
   
   Charts.setupFirstChart();
+  Charts.bindRemoveFormattedDatesCancelButton();
   UI.setupElements();
   UI.getChart();
   UI.setDates();
