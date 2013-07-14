@@ -131,18 +131,15 @@
       e.preventDefault();
       
       var dates = $("#from").val() + "." + $("#to").val();
-      console.log(dates);
       
       if (dates.length > 1) dates = "date=" + dates
       if (dates.length == 1) dates = "date="
       
       var chart = $('.chart-types').parent('.active').data('chart');
       chart = "&chart=" + chart;
-      console.log(chart)
       
       var keywords = UI.getKeywords();
       keywords = "&keywords=" + keywords.join(";").replace(/ /g, "_");
-      console.log(keywords)
       
       var since = UI.getSince();
       since = "&since=" + since
@@ -167,15 +164,17 @@
     },
     
     receivedChartData: function(dates, chart, keywords, data) { 
+      
       var since = data.since
         , displayedTweets = data.displayedTweets
         , formattedDates = data.formattedDates
         , data = data.chartData
         , chart = chart.split("=")[1]
-      
-        if (data.length) {
+              
+        if (typeof data!='undefined') {
           console.log(since); //todo fix
           Charts.replaceChart(dates, chart, keywords, data);
+          Charts.replaceChartHeader(chart);
           Charts.replaceChartLegend(chart, data);       
           Charts.replaceTotalTweets(chart, data);  
           Charts.replaceDates(formattedDates);
@@ -183,8 +182,7 @@
           UI.setSince(since); 
         }
         
-        if (!data.length) {
-          console.log(displayedTweets);
+        if (typeof data==='undefined') {
           Charts.replaceChart(dates, chart, keywords, data);
           $('#myChart').html("<h2>No tweets found.</h2><h4 class='subheader'>Try adding keywords or searching a different time range.</h4>")
           $('.current-chart-legend').html('');
@@ -212,6 +210,9 @@
     },
     
     replaceChartLegend: function(chart, data) {
+      console.log(chart);
+      console.log(data);
+      console.log("yes");
       if (chart === "Bar" || chart === "Line" || chart === "Radar") data = data.datasets;
       
       var container = $('.current-chart-legend')
@@ -243,11 +244,21 @@
       })
     },
     
+    replaceChartHeader: function(chart) {
+      $('#chart-header').text(chart + ' chart')
+      var subtext = "";
+      if (chart === "Pie") subtext = "Pie charts are great at comparing proportions within a single data set."
+      if (chart === "Doughnut") subtext = "Similar to pie charts, doughnut charts are great for showing proportional data."
+      if (chart === "Bar") subtext = "Bar graphs are great at showing trend data."
+      if (chart === "Line") subtext = "Line graphs are most widely used graph for showing trends."
+      if (chart === "PolarArea") subtext = "Polar area charts are similar to pie charts, but the variable isn't the circumference of the segment, but the radius of it."
+      if (chart === "Radar") subtext = "Radar charts are good for comparing a selection of different pieces of data."
+      $('#chart-subheader').text(subtext);
+    },
+    
     replaceTweets: function(displayedTweets) {
-      console.log(displayedTweets);
-      $('ul.tweets').html('');
+      $('ul.tweets-list').html('');
       for (var i=0; i<displayedTweets.length; i+=1) {
-        console.log(displayedTweets[i]);
         $('ul.tweets').append(
           '<li class="tweet">' 
           + '<div class="row">'

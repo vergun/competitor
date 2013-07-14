@@ -35,7 +35,7 @@ dl.sub-nav
 .row
   .small-7.columns
     h3.subheader Individual tweets
-    ul.tweets
+    ul.tweets.tweets-list
       each tweet in displayedTweets
         li.tweet 
           .row
@@ -62,8 +62,8 @@ dl.sub-nav
             p.title(data-section-title='data-section-title')
               a(href='#panel1') Graph
             .content(data-section-content='data-section-content')
-              h4 Pie chart
-              h6.subheader Visualization of keywords over time
+              h4#chart-header Pie chart
+              h6.subheader#chart-subheader Pie charts are great at comparing proportions within a single data set.
               .current-chart
                 canvas#myChart
               .current-chart-legend.panel
