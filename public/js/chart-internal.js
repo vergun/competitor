@@ -164,7 +164,7 @@
     },
     
     receivedChartData: function(dates, chart, keywords, data) { 
-      
+            
       var since = data.since
         , displayedTweets = data.displayedTweets
         , formattedDates = data.formattedDates
@@ -181,12 +181,13 @@
           Charts.replaceTweets(displayedTweets);
           UI.setSince(since); 
         }
-        
-        if (typeof data==='undefined') {
-          Charts.replaceChart(dates, chart, keywords, data);
+        if (chart === "Bar" || chart === "Line" || chart === "Radar") data = data.datasets; //todo radar is undefined  
+        if (typeof data == 'undefined' || data.length === 0) {
+          //Charts.replaceChart(dates, chart, keywords, data);
           $('#myChart').html("<h2>No tweets found.</h2><h4 class='subheader'>Try adding keywords or searching a different time range.</h4>")
-          $('.current-chart-legend').html('');
+          $('.current-chart-legend').html('<h6 class="subheader">No results found, try adding keywords or choosing a different date range.</h6>');
           $("#tweets-total").text(" No tweets found");
+          $(".tweets-list").html('<h6 class="subheader">No results found, try adding keywords or choosing a different date range.</h6>')
         }
                   
         
@@ -210,9 +211,6 @@
     },
     
     replaceChartLegend: function(chart, data) {
-      console.log(chart);
-      console.log(data);
-      console.log("yes");
       if (chart === "Bar" || chart === "Line" || chart === "Radar") data = data.datasets;
       
       var container = $('.current-chart-legend')
@@ -259,7 +257,7 @@
     replaceTweets: function(displayedTweets) {
       $('ul.tweets-list').html('');
       for (var i=0; i<displayedTweets.length; i+=1) {
-        $('ul.tweets').append(
+        $('ul.tweets-list').append(
           '<li class="tweet">' 
           + '<div class="row">'
           + '<div class="small-3 columns">'
@@ -268,7 +266,7 @@
           + '<div class="small-8 columns">'
           + '<h6>'
           + '<a class="user-name" href="http://www.twitter.com/' + displayedTweets[i].user.screen_name + '" target="_blank">'
-          + displayedTweets[i].user.name + ' said:' + '</a>' 
+          + displayedTweets[i].user.name + '</a> said:' 
           + '</h6>'
           + '<span class="text">' + displayedTweets[i].text + '</span>'
           + '</div>'

@@ -43,7 +43,8 @@ dl.sub-nav
               img(src=tweet.user.profile_image_url)
             .small-8.columns
               h6
-                a.user-name(href='http://www.twitter.com/#{tweet.user.screen_name}', target='_blank')=tweet.user.name + " said:" 
+                a.user-name(href='http://www.twitter.com/#{tweet.user.screen_name}', target='_blank')=tweet.user.name
+                span  said: 
               span.text= tweet.text 
             hr
             // 
