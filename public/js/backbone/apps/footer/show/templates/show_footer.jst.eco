@@ -1,4 +1,0 @@
-<footer class="standard" itemscope itemtype="http://schema.org/WPFooter">
-<p class="attribution" itemscope itemtype="http://schema.org/Organization">&copy; <span class="sc"><span itemprop="copyrightYear"><%= @[0].copyrightyear %></span></span> <span itemprop="brand"><%= @[0].brand %></span><%= @[0].text %></p>
-<div id="DigiCertClickID_PPD7bcuk" data-language="en_US" class="hide"><a href="http://www.digicert.com/ev-ssl-certification.htm">&nbsp;</a></div>
-</footer>

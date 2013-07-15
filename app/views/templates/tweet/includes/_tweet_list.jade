@@ -1,0 +1,17 @@
+each tweet in displayedTweets
+  li.tweet 
+    .row
+      .small-3.columns
+        img(src=tweet.user.profile_image_url)
+      .small-8.columns
+        h6
+          a.user-name(href='http://www.twitter.com/#{tweet.user.screen_name}', target='_blank')=tweet.user.name
+          span  said: 
+        span.text=tweet.text 
+      hr
+      // 
+        span.keywords Tracked by: #{keywords}
+        span.lang= lang
+        span.source= source
+        span.user-friends-count=user.friends_count + " Friends"
+      

@@ -41,7 +41,9 @@ exports.getChartData = function(req, res, next, query) {
     Tweet.list(options, function(err, tws) {  
       if (err) return next(err);                       
         var graphData = chartsHelper.formatGraphData( d.colors, tws, d.labels, chartsHelper.addColorsToGraphData )
-          , data = [];
+          , data = []
+          , arrayOfTweetsSource = _.map(_(tws).countBy('source'), function (value, key) { return [key, value] })
+          , arrayOfTweetsLanguage = _.map(_(tws).countBy('lang'), function (value, key) { return [key, value] });
 
         if (_(d.simple_charts).contains(d.chart)) data = graphData;   
         if (_(d.complex_charts).contains(d.chart)) {                        
@@ -50,11 +52,16 @@ exports.getChartData = function(req, res, next, query) {
           data.datasets = graphData;             
           }
         
+        req.chart = d.chart;
         req.chartData = data;
         req.displayedTweets = tws.slice(0, 19);
         req.since = (tws.length) ? tws[0].id_str : "";
         req.formattedDates = d.formattedDates;
-                
+        req.keywords = d.keywords;
+        req.source = _.sortBy(arrayOfTweetsSource, function (t) { return t[1] }).reverse()
+        req.lang = _.sortBy(arrayOfTweetsLanguage, function (t) { return t[1] }).reverse()
+        req.tweets = tws
+           
         next()
           
     });
@@ -107,7 +114,7 @@ exports.index = function(req, res){
 
 exports.chart = function(req, res){
   res.writeHead(200, {'content-type': 'text/json' });
-  res.write( JSON.stringify({ chartData: req.chartData, displayedTweets: req.displayedTweets, since: req.since, formattedDates: req.formattedDates }) );
+  res.write( JSON.stringify({ tweets: req.tweets, chart: req.chart, lang: req.lang, source: req.source, chartData: req.chartData, displayedTweets: req.displayedTweets, since: req.since, formattedDates: req.formattedDates, keywords: req.keywords }) );
   res.end('\n');
 }
 

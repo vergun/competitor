@@ -1,0 +1,83 @@
+.row
+  .small-1.columns
+    ul.side-nav
+      li.active
+        a(href='#') List
+      li
+        a(href='#') Intelligence
+  .small-7.columns
+    h3.subheader Individual tweets
+    ul.tweets.tweets-list
+      each tweet in displayedTweets
+        li.tweet 
+          .row
+            .small-3.columns
+              img(src=tweet.user.profile_image_url)
+            .small-8.columns
+              h6
+                a.user-name(href='http://www.twitter.com/#{tweet.user.screen_name}', target='_blank')=tweet.user.name
+                span  said: 
+              span.text=tweet.text 
+            hr
+  .small-4.columns
+    .section-container.tabs(data-section='tabs')
+        section
+            p.title(data-section-title='data-section-title')
+              a(href='#panel1') Graph
+            .content(data-section-content='data-section-content')
+              h4#chart-header Pie chart
+              h6.subheader#chart-subheader Pie charts are great at comparing proportions within a single data set.
+              .current-chart
+                canvas#myChart
+              .current-chart-legend
+                table
+                  tbody
+                    each dataPoint in chartData
+                      tr
+                        td
+                          .chartBox(style= "background-color:" + dataPoint.color + ";")
+                        td= dataPoint.keyword
+                        td= dataPoint.value + " tweets"
+                        td= dataPoint.percentage + "%"
+        section
+          p.title(data-section-title='data-section-title')
+            a(href='#panel2') Map
+          .content(data-section-content='data-section-content')
+            h4 Tweets by language
+            h6.subheader Sorted in descending order
+            ul.tweets
+              table
+                thead
+                  tr
+                    th Language
+                    th Count
+                    th Percentage
+                tbody 
+                  each val in lang
+                    tr
+                      td= val[0]
+                      td= val[1]
+                      td= (Math.round((val[1]/tweets.length)*100)).toString() + "%"
+        section
+          p.title(data-section-title='data-section-title')
+            a(href='#panel2') Source
+          .content(data-section-content='data-section-content')
+            h4 Tweets by source
+            h6.subheader Sorted in descending order
+            ul.tweets
+              table
+                thead
+                  tr
+                    th Source
+                    th Count
+                    th Percentage
+                tbody
+                  each val in source
+                    tr
+                      if val[0]
+                        td 
+                          !{val[0].charAt(0).toUpperCase() + val[0].slice(1)}
+                      else
+                        td
+                      td= val[1]
+                      td= (Math.round((val[1]/tweets.length)*100)).toString() + "%"
