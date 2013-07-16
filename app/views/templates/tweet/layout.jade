@@ -1,3 +1,30 @@
-#tweets-header-region
-#tweets-main-region
-#tweets-footer-region
+#tweetApp-header
+#tweetApp-headerNav
+.row
+  #tweetApp-sideNav(class='small-1 columns')
+  #tweetApp-list(class='small-7 columns')
+  .small-4.columns
+    .section-container.tabs(data-section='tabs')
+        section
+          p.title(data-section-title='data-section-title')
+            a(href='#panel1') Graph
+          .content(data-section-content='data-section-content')
+            #tweetApp-chart
+            #tweetApp-chartLegend
+        section
+          p.title(data-section-title='data-section-title')
+            a(href='#panel2') Map
+          .content(data-section-content='data-section-content')
+            #tweetApp-map
+        section
+          p.title(data-section-title='data-section-title')
+            a(href='#panel2') Source
+          .content(data-section-content='data-section-content')
+            #tweetApp-source
+.row
+  #tweetApp-footer
+    
+    
+    
+
+    

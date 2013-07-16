@@ -1,4 +1,4 @@
-@Competitor = do (Backbone, Marionette) ->
+@Competitor = do (Backbone, Marionette, Chart) ->
   
   App = new Marionette.Application
   

@@ -1,0 +1,13 @@
+h3.subheader Individual tweets
+ul.tweets.tweets-list
+  each tweet in displayedTweets
+    li.tweet 
+      .row
+        .small-3.columns
+          img(src=tweet.user.profile_image_url)
+        .small-8.columns
+          h6
+            a.user-name(href='http://www.twitter.com/#{tweet.user.screen_name}', target='_blank')=tweet.user.name
+            span  said: 
+          span.text=tweet.text 
+        hr

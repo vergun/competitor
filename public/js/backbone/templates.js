@@ -29,11 +29,67 @@ exports.header.header = function anonymous(locals) {
     return buf.join("");
 };
 
+// chart.jade compiled template
+exports.tweet.chart = function anonymous(locals) {
+    var buf = [];
+    with (locals || {}) {
+        buf.push('<h4 id="chart-header">Pie chart</h4><h6 id="chart-subheader" class="subheader">Pie charts are great at comparing proportions within a single data set.</h6><div class="current-chart"><canvas id="myChart"></canvas></div><div class="current-chart-legend"></div>');
+    }
+    return buf.join("");
+};
+
+// chartlegend.jade compiled template
+exports.tweet.chartlegend = function anonymous(locals) {
+    var buf = [];
+    with (locals || {}) {
+        buf.push("<table><tbody>");
+        (function() {
+            var $$obj = chartData;
+            if ("number" == typeof $$obj.length) {
+                for (var $index = 0, $$l = $$obj.length; $index < $$l; $index++) {
+                    var dataPoint = $$obj[$index];
+                    buf.push("<tr><td><div" + jade.attrs({
+                        style: "background-color:" + dataPoint.color + ";",
+                        "class": "chartBox"
+                    }, {
+                        style: true
+                    }) + "></div></td><td>" + jade.escape(null == (jade.interp = dataPoint.keyword) ? "" : jade.interp) + "</td><td>" + jade.escape(null == (jade.interp = dataPoint.value + " tweets") ? "" : jade.interp) + "</td><td>" + jade.escape(null == (jade.interp = dataPoint.percentage + "%") ? "" : jade.interp) + "</td></tr>");
+                }
+            } else {
+                var $$l = 0;
+                for (var $index in $$obj) {
+                    $$l++;
+                    if ($$obj.hasOwnProperty($index)) {
+                        var dataPoint = $$obj[$index];
+                        buf.push("<tr><td><div" + jade.attrs({
+                            style: "background-color:" + dataPoint.color + ";",
+                            "class": "chartBox"
+                        }, {
+                            style: true
+                        }) + "></div></td><td>" + jade.escape(null == (jade.interp = dataPoint.keyword) ? "" : jade.interp) + "</td><td>" + jade.escape(null == (jade.interp = dataPoint.value + " tweets") ? "" : jade.interp) + "</td><td>" + jade.escape(null == (jade.interp = dataPoint.percentage + "%") ? "" : jade.interp) + "</td></tr>");
+                    }
+                }
+            }
+        }).call(this);
+        buf.push("</tbody></table>");
+    }
+    return buf.join("");
+};
+
 // header.jade compiled template
 exports.tweet.header = function anonymous(locals) {
     var buf = [];
     with (locals || {}) {
-        buf.push('<div class="row"><p><div class="formatted-dates"><h2 class="subheader">Today&emsp;     <span id="tweets-total" class="secondary label radius">' + jade.escape(null == (jade.interp = " " + tweetsCount()) ? "" : jade.interp) + '</span></h2></div></p><dl class="sub-nav"><dt>Tracking keywords:</dt>');
+        buf.push('<div class="row"><p><div class="formatted-dates"><h2 class="subheader">Today&emsp;     <span id="tweets-total" class="secondary label radius">' + jade.escape(null == (jade.interp = " " + tweetsCount()) ? "" : jade.interp) + "</span></h2></div></p></div>");
+    }
+    return buf.join("");
+};
+
+// headernav.jade compiled template
+exports.tweet.headernav = function anonymous(locals) {
+    var buf = [];
+    with (locals || {}) {
+        buf.push('<div class="row"><dl class="sub-nav"><dt>Tracking keywords:</dt>');
         (function() {
             var $$obj = keywords;
             if ("number" == typeof $$obj.length) {
@@ -142,23 +198,93 @@ exports.tweet.includes._tweets_empty = function anonymous(locals) {
 exports.tweet.layout = function anonymous(locals) {
     var buf = [];
     with (locals || {}) {
-        buf.push('<div id="tweets-header-region"></div><div id="tweets-main-region"></div><div id="tweets-footer-region"></div>');
+        buf.push('<div id="tweetApp-header"></div><div id="tweetApp-headerNav"></div><div class="row"><div id="tweetApp-sideNav" class="small-1 columns"></div><div id="tweetApp-list" class="small-7 columns"></div><div class="small-4 columns"><div data-section="tabs" class="section-container tabs"><section><p data-section-title="data-section-title" class="title"><a href="#panel1">Graph</a></p><div data-section-content="data-section-content" class="content"><div id="tweetApp-chart"></div><div id="tweetApp-chartLegend"></div></div></section><section><p data-section-title="data-section-title" class="title"><a href="#panel2">Map</a></p><div data-section-content="data-section-content" class="content"><div id="tweetApp-map"></div></div></section><section><p data-section-title="data-section-title" class="title"><a href="#panel2">Source</a></p><div data-section-content="data-section-content" class="content"><div id="tweetApp-source"></div></div></section></div></div></div><div class="row"><div id="tweetApp-footer"></div></div>');
     }
     return buf.join("");
 };
 
-// tweet.jade compiled template
-exports.tweet.tweet = function anonymous(locals) {
+// map.jade compiled template
+exports.tweet.map = function anonymous(locals) {
     var buf = [];
-    with (locals || {}) {}
+    with (locals || {}) {
+        buf.push('<h4>Tweets by language</h4><h6 class="subheader">Sorted in descending order</h6><ul class="tweets"><table><thead><tr><th>Language</th><th>Count</th><th>Percentage</th></tr></thead><tbody> ');
+        (function() {
+            var $$obj = lang;
+            if ("number" == typeof $$obj.length) {
+                for (var $index = 0, $$l = $$obj.length; $index < $$l; $index++) {
+                    var val = $$obj[$index];
+                    buf.push("<tr><td>" + jade.escape(null == (jade.interp = val[0]) ? "" : jade.interp) + "</td><td>" + jade.escape(null == (jade.interp = val[1]) ? "" : jade.interp) + "</td><td>" + jade.escape(null == (jade.interp = Math.round(val[1] / tweets.length * 100).toString() + "%") ? "" : jade.interp) + "</td></tr>");
+                }
+            } else {
+                var $$l = 0;
+                for (var $index in $$obj) {
+                    $$l++;
+                    if ($$obj.hasOwnProperty($index)) {
+                        var val = $$obj[$index];
+                        buf.push("<tr><td>" + jade.escape(null == (jade.interp = val[0]) ? "" : jade.interp) + "</td><td>" + jade.escape(null == (jade.interp = val[1]) ? "" : jade.interp) + "</td><td>" + jade.escape(null == (jade.interp = Math.round(val[1] / tweets.length * 100).toString() + "%") ? "" : jade.interp) + "</td></tr>");
+                    }
+                }
+            }
+        }).call(this);
+        buf.push("</tbody></table></ul>");
+    }
     return buf.join("");
 };
 
-// tweets.jade compiled template
-exports.tweet.tweets = function anonymous(locals) {
+// sidenav.jade compiled template
+exports.tweet.sidenav = function anonymous(locals) {
     var buf = [];
     with (locals || {}) {
-        buf.push('<div class="row"><div class="small-1 columns"><ul class="side-nav"><li class="active"><a href="#">List</a></li><li><a href="#">Intelligence</a></li></ul></div><div class="small-7 columns"><h3 class="subheader">Individual tweets</h3><ul class="tweets tweets-list">');
+        buf.push('<ul class="side-nav"><li class="active"><a href="#">List</a></li><li><a href="#">Intelligence</a></li></ul>');
+    }
+    return buf.join("");
+};
+
+// source.jade compiled template
+exports.tweet.source = function anonymous(locals) {
+    var buf = [];
+    with (locals || {}) {
+        buf.push('<h4>Tweets by source</h4><h6 class="subheader">Sorted in descending order</h6><ul class="tweets"><table><thead><tr><th>Source</th><th>Count</th><th>Percentage</th></tr></thead><tbody>');
+        (function() {
+            var $$obj = source;
+            if ("number" == typeof $$obj.length) {
+                for (var $index = 0, $$l = $$obj.length; $index < $$l; $index++) {
+                    var val = $$obj[$index];
+                    buf.push("<tr>");
+                    if (val[0]) {
+                        buf.push("<td> \n" + ((jade.interp = val[0].charAt(0).toUpperCase() + val[0].slice(1)) == null ? "" : jade.interp) + "</td>");
+                    } else {
+                        buf.push("<td></td>");
+                    }
+                    buf.push("<td>" + jade.escape(null == (jade.interp = val[1]) ? "" : jade.interp) + "</td><td>" + jade.escape(null == (jade.interp = Math.round(val[1] / tweets.length * 100).toString() + "%") ? "" : jade.interp) + "</td></tr>");
+                }
+            } else {
+                var $$l = 0;
+                for (var $index in $$obj) {
+                    $$l++;
+                    if ($$obj.hasOwnProperty($index)) {
+                        var val = $$obj[$index];
+                        buf.push("<tr>");
+                        if (val[0]) {
+                            buf.push("<td> \n" + ((jade.interp = val[0].charAt(0).toUpperCase() + val[0].slice(1)) == null ? "" : jade.interp) + "</td>");
+                        } else {
+                            buf.push("<td></td>");
+                        }
+                        buf.push("<td>" + jade.escape(null == (jade.interp = val[1]) ? "" : jade.interp) + "</td><td>" + jade.escape(null == (jade.interp = Math.round(val[1] / tweets.length * 100).toString() + "%") ? "" : jade.interp) + "</td></tr>");
+                    }
+                }
+            }
+        }).call(this);
+        buf.push("</tbody></table></ul>");
+    }
+    return buf.join("");
+};
+
+// tweetlist.jade compiled template
+exports.tweet.tweetlist = function anonymous(locals) {
+    var buf = [];
+    with (locals || {}) {
+        buf.push('<h3 class="subheader">Individual tweets</h3><ul class="tweets tweets-list">');
         (function() {
             var $$obj = displayedTweets;
             if ("number" == typeof $$obj.length) {
@@ -199,86 +325,7 @@ exports.tweet.tweets = function anonymous(locals) {
                 }
             }
         }).call(this);
-        buf.push('</ul></div><div class="small-4 columns"><div data-section="tabs" class="section-container tabs"><section><p data-section-title="data-section-title" class="title"><a href="#panel1">Graph</a></p><div data-section-content="data-section-content" class="content"><h4 id="chart-header">Pie chart</h4><h6 id="chart-subheader" class="subheader">Pie charts are great at comparing proportions within a single data set.</h6><div class="current-chart"><canvas id="myChart"></canvas></div><div class="current-chart-legend"><table><tbody>');
-        (function() {
-            var $$obj = chartData;
-            if ("number" == typeof $$obj.length) {
-                for (var $index = 0, $$l = $$obj.length; $index < $$l; $index++) {
-                    var dataPoint = $$obj[$index];
-                    buf.push("<tr><td><div" + jade.attrs({
-                        style: "background-color:" + dataPoint.color + ";",
-                        "class": "chartBox"
-                    }, {
-                        style: true
-                    }) + "></div></td><td>" + jade.escape(null == (jade.interp = dataPoint.keyword) ? "" : jade.interp) + "</td><td>" + jade.escape(null == (jade.interp = dataPoint.value + " tweets") ? "" : jade.interp) + "</td><td>" + jade.escape(null == (jade.interp = dataPoint.percentage + "%") ? "" : jade.interp) + "</td></tr>");
-                }
-            } else {
-                var $$l = 0;
-                for (var $index in $$obj) {
-                    $$l++;
-                    if ($$obj.hasOwnProperty($index)) {
-                        var dataPoint = $$obj[$index];
-                        buf.push("<tr><td><div" + jade.attrs({
-                            style: "background-color:" + dataPoint.color + ";",
-                            "class": "chartBox"
-                        }, {
-                            style: true
-                        }) + "></div></td><td>" + jade.escape(null == (jade.interp = dataPoint.keyword) ? "" : jade.interp) + "</td><td>" + jade.escape(null == (jade.interp = dataPoint.value + " tweets") ? "" : jade.interp) + "</td><td>" + jade.escape(null == (jade.interp = dataPoint.percentage + "%") ? "" : jade.interp) + "</td></tr>");
-                    }
-                }
-            }
-        }).call(this);
-        buf.push('</tbody></table></div></div></section><section><p data-section-title="data-section-title" class="title"><a href="#panel2">Map</a></p><div data-section-content="data-section-content" class="content"><h4>Tweets by language</h4><h6 class="subheader">Sorted in descending order</h6><ul class="tweets"><table><thead><tr><th>Language</th><th>Count</th><th>Percentage</th></tr></thead><tbody> ');
-        (function() {
-            var $$obj = lang;
-            if ("number" == typeof $$obj.length) {
-                for (var $index = 0, $$l = $$obj.length; $index < $$l; $index++) {
-                    var val = $$obj[$index];
-                    buf.push("<tr><td>" + jade.escape(null == (jade.interp = val[0]) ? "" : jade.interp) + "</td><td>" + jade.escape(null == (jade.interp = val[1]) ? "" : jade.interp) + "</td><td>" + jade.escape(null == (jade.interp = Math.round(val[1] / tweets.length * 100).toString() + "%") ? "" : jade.interp) + "</td></tr>");
-                }
-            } else {
-                var $$l = 0;
-                for (var $index in $$obj) {
-                    $$l++;
-                    if ($$obj.hasOwnProperty($index)) {
-                        var val = $$obj[$index];
-                        buf.push("<tr><td>" + jade.escape(null == (jade.interp = val[0]) ? "" : jade.interp) + "</td><td>" + jade.escape(null == (jade.interp = val[1]) ? "" : jade.interp) + "</td><td>" + jade.escape(null == (jade.interp = Math.round(val[1] / tweets.length * 100).toString() + "%") ? "" : jade.interp) + "</td></tr>");
-                    }
-                }
-            }
-        }).call(this);
-        buf.push('</tbody></table></ul></div></section><section><p data-section-title="data-section-title" class="title"><a href="#panel2">Source</a></p><div data-section-content="data-section-content" class="content"><h4>Tweets by source</h4><h6 class="subheader">Sorted in descending order</h6><ul class="tweets"><table><thead><tr><th>Source</th><th>Count</th><th>Percentage</th></tr></thead><tbody>');
-        (function() {
-            var $$obj = source;
-            if ("number" == typeof $$obj.length) {
-                for (var $index = 0, $$l = $$obj.length; $index < $$l; $index++) {
-                    var val = $$obj[$index];
-                    buf.push("<tr>");
-                    if (val[0]) {
-                        buf.push("<td> \n" + ((jade.interp = val[0].charAt(0).toUpperCase() + val[0].slice(1)) == null ? "" : jade.interp) + "</td>");
-                    } else {
-                        buf.push("<td></td>");
-                    }
-                    buf.push("<td>" + jade.escape(null == (jade.interp = val[1]) ? "" : jade.interp) + "</td><td>" + jade.escape(null == (jade.interp = Math.round(val[1] / tweets.length * 100).toString() + "%") ? "" : jade.interp) + "</td></tr>");
-                }
-            } else {
-                var $$l = 0;
-                for (var $index in $$obj) {
-                    $$l++;
-                    if ($$obj.hasOwnProperty($index)) {
-                        var val = $$obj[$index];
-                        buf.push("<tr>");
-                        if (val[0]) {
-                            buf.push("<td> \n" + ((jade.interp = val[0].charAt(0).toUpperCase() + val[0].slice(1)) == null ? "" : jade.interp) + "</td>");
-                        } else {
-                            buf.push("<td></td>");
-                        }
-                        buf.push("<td>" + jade.escape(null == (jade.interp = val[1]) ? "" : jade.interp) + "</td><td>" + jade.escape(null == (jade.interp = Math.round(val[1] / tweets.length * 100).toString() + "%") ? "" : jade.interp) + "</td></tr>");
-                    }
-                }
-            }
-        }).call(this);
-        buf.push("</tbody></table></ul></div></section></div></div></div>");
+        buf.push("</ul>");
     }
     return buf.join("");
 };

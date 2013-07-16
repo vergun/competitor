@@ -1,0 +1,19 @@
+h4 Tweets by source
+h6.subheader Sorted in descending order
+ul.tweets
+  table
+    thead
+      tr
+        th Source
+        th Count
+        th Percentage
+    tbody
+      each val in source
+        tr
+          if val[0]
+            td 
+              !{val[0].charAt(0).toUpperCase() + val[0].slice(1)}
+          else
+            td
+          td= val[1]
+          td= (Math.round((val[1]/tweets.length)*100)).toString() + "%"
