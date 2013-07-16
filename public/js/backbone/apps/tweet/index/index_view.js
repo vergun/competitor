@@ -44,13 +44,8 @@
 
       Header.prototype.template = templatizer.tweet.header;
 
-      Header.prototype.events = {
-        "click .update-chart": "charts"
-      };
-
       Header.prototype.ui = {
-        tweetsTotal: "#tweets-total",
-        chartTypes: ".chart-types"
+        tweetsTotal: "#tweets-total"
       };
 
       Header.prototype.templateHelpers = {
@@ -73,21 +68,6 @@
         "change": "render"
       };
 
-      Header.prototype.charts = function(e) {
-        this.ui.chartTypes.each(function() {
-          return $(this).parent().removeClass('active');
-        });
-        $(e.currentTarget).parent().addClass('active');
-        return this.trigger("update:chart");
-      };
-
-      Header.prototype.updateCharts = function(e) {
-        var chart, model;
-        chart = $('.chart-types').parent('.active').data('chart');
-        model = this.model;
-        return App.vent.trigger("update:charts", chart, model);
-      };
-
       return Header;
 
     })(App.Views.ItemView);
@@ -100,6 +80,34 @@
       }
 
       HeaderNav.prototype.template = templatizer.tweet.headernav;
+
+      HeaderNav.prototype.events = {
+        "click .update-chart": "charts",
+        "click .update-keyword": "keywords"
+      };
+
+      HeaderNav.prototype.ui = {
+        chartTypes: ".chart-types"
+      };
+
+      HeaderNav.prototype.charts = function(e) {
+        this.ui.chartTypes.each(function() {
+          return $(this).parent().removeClass('active');
+        });
+        return $(e.currentTarget).parent().addClass('active');
+      };
+
+      HeaderNav.prototype.keywords = function(e) {
+        e = $(e.currentTarget);
+        return e.toggleClass('active');
+      };
+
+      HeaderNav.prototype.updateCharts = function(e) {
+        var chart, model;
+        chart = $('.chart-types').parent('.active').data('chart');
+        model = this.model;
+        return App.vent.trigger("update:charts", chart, model);
+      };
 
       return HeaderNav;
 
@@ -115,6 +123,20 @@
       }
 
       LeftNav.prototype.template = templatizer.tweet.sidenav;
+
+      LeftNav.prototype.events = {
+        'click .side-nav a': 'switchApps'
+      };
+
+      LeftNav.prototype.switchApps = function(e) {
+        e = $(e.currentTarget);
+        if (!e.parent().hasClass('active')) {
+          $.each(e.parent().parent().children(), function(i, el) {
+            return $(el).removeClass('active');
+          });
+          return e.parent().addClass('active');
+        }
+      };
 
       return LeftNav;
 

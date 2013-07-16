@@ -21,14 +21,9 @@
   ## todo add sample data structure up here to comments
   class Index.Header extends App.Views.ItemView
     template: templatizer.tweet.header
-      
-    events:
-      "click .update-chart" : "charts"
-    
     ui:
       tweetsTotal: "#tweets-total"
-      chartTypes: ".chart-types"
-      
+
     templateHelpers:
       tweetsCount: ->
         total = 0
@@ -43,26 +38,45 @@
     modelEvents:
       "change" : "render"
       
+  class Index.HeaderNav extends App.Views.ItemView
+    template: templatizer.tweet.headernav
+    events:
+      "click .update-chart" : "charts"
+      "click .update-keyword" : "keywords"
+    ui:
+      chartTypes: ".chart-types"
+      
     charts: (e) ->
       @ui.chartTypes.each ->
         $(this).parent().removeClass('active')
       $(e.currentTarget).parent().addClass('active')
-      @trigger "update:chart"
-      # @updateCharts ech
+      # @trigger "update:chart"
+      # @updateCharts e
+      
+    keywords: (e) ->
+      e = $(e.currentTarget)
+      e.toggleClass('active')
       
     updateCharts: (e) ->
       chart = $('.chart-types').parent('.active').data('chart')
       model = @model
       App.vent.trigger "update:charts", chart, model
-      
-  class Index.HeaderNav extends App.Views.ItemView
-    template: templatizer.tweet.headernav
     
   ### left ###   
   ##############
     
   class Index.LeftNav extends App.Views.ItemView
     template: templatizer.tweet.sidenav
+    
+    events:
+      'click .side-nav a': 'switchApps'
+      
+    switchApps: (e) ->
+      e = $(e.currentTarget)
+      if !e.parent().hasClass('active')
+        $.each e.parent().parent().children(), (i, el) ->
+          $(el).removeClass('active')
+        e.parent().addClass('active')
     
   ### tweet list ###   
   ##############
