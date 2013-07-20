@@ -29,13 +29,17 @@
 
       showHeader: function(tweets) {
         this.headerView = this.getHeaderView(tweets);
-        this.headerView.on("update:chart", function(args) {
-          return console.log(args.model);
-        });
         return this.layout.headerRegion.show(this.headerView);
       },
       showHeaderNav: function(tweets) {
         this.headernavView = this.getHeaderNavView(tweets);
+        this.headernavView.on("update:chart", function(options) {
+          this.model.set('chart', options.type);
+          $.extend(options, {
+            model: this.model
+          });
+          return App.vent.trigger("update:chart", options);
+        });
         return this.layout.headerNavRegion.show(this.headernavView);
       },
       getHeaderView: function(tweets) {
@@ -73,11 +77,11 @@
       /*  right side*/
 
       showChart: function(tweets) {
+        console.log(tweets);
         this.chartView = this.getChartView;
         return this.layout.chartRegion.show(this.chartView(tweets));
       },
       showChartLegend: function(data) {
-        console.log(data);
         this.chartLegendView = this.getChartLegendView(data);
         return this.layout.chartLegendRegion.show(this.chartLegendView);
       },

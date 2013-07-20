@@ -44,24 +44,23 @@
       "click .update-chart" : "charts"
       "click .update-keyword" : "keywords"
     ui:
-      chartTypes: ".chart-types"
+      type: '.chart-types'
       
     charts: (e) ->
-      @ui.chartTypes.each ->
+      @ui.type.each ->
         $(this).parent().removeClass('active')
       $(e.currentTarget).parent().addClass('active')
-      # @trigger "update:chart"
-      # @updateCharts e
+      @updateChart()
+      
+    updateChart: ->
+      options = { type: @ui.type.parent('.active').data('chart') }
+      @trigger "update:chart",
+        options
       
     keywords: (e) ->
       e = $(e.currentTarget)
       e.toggleClass('active')
       
-    updateCharts: (e) ->
-      chart = $('.chart-types').parent('.active').data('chart')
-      model = @model
-      App.vent.trigger "update:charts", chart, model
-    
   ### left ###   
   ##############
     
@@ -85,24 +84,9 @@
     template: templatizer.tweet.tweetlist
     
     ui:
-      chart: "#myChart"
       updateChart: ".update-chart"
       updateKeyword: ".update-keyword"
       submitDateRange: "#submit-date-range"
-      
-    onRender: ->
-      # @addOrUpdateChart()
-      
-    addOrUpdateChart: (chart, model, view)  ->
-      chart = if typeof chart isnt "undefined" then chart else this.model.get('chart')
-      data = if typeof model isnt "undefined" then model.get('chartData') else this.model.get('chartData')
-      data = if chart is "Bar" or chart is "Line" or chart is "Radar" then data.datasets else data
-      console.log this.ui.chart
-      ctx = this.ui.chart.get(0).getContext('2d') #failing because changed index to only tweet list not everything
-      new window.Chart(ctx)[chart] data, { animation: true }
-      
-    App.vent.on "update:charts", (chart, model) =>
-      this.prototype.addOrUpdateChart chart, model
     
   ### main graph area ###
   #######################
@@ -112,6 +96,28 @@
     
   class Index.Chart extends App.Views.ItemView
     template: templatizer.tweet.chart
+    ui: 
+      type: '.update-chart'
+      context: '#tweet-chart'
+      
+    onShow: ->
+      @addOrUpdateChart { model: @model }
+    
+    addOrUpdateChart: (options)  ->
+      $.extend options, { chart: @model.get('chart'), data: @model.get('chartData') }
+      options.data = @validate options.data, options.chart
+      @showChart @ui.context.get(0).getContext('2d'), options.chart, options.data
+    
+    validate: (data, chart) ->
+      data = data.chartData if _.indexOf(["Bar", "Line", "Radar"], chart) isnt -1
+      console.log "Data:"
+      console.log data
+      data
+
+    showChart: (context, chart, data, options) ->
+      options or= {}
+      $.extend options, { animation: true }
+      new window.Chart(context)[chart] data, options
     
   class Index.ChartLegend extends App.Views.ItemView #turn to compositeview
     template: templatizer.tweet.chartlegend

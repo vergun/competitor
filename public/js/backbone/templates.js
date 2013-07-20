@@ -33,7 +33,7 @@ exports.header.header = function anonymous(locals) {
 exports.tweet.chart = function anonymous(locals) {
     var buf = [];
     with (locals || {}) {
-        buf.push('<h4 id="chart-header">Pie chart</h4><h6 id="chart-subheader" class="subheader">Pie charts are great at comparing proportions within a single data set.</h6><div class="current-chart"><canvas id="myChart"></canvas></div><div class="current-chart-legend"></div>');
+        buf.push('<h4 id="chart-header">Pie chart</h4><h6 id="chart-subheader" class="subheader">Pie charts are great at comparing proportions within a single data set.</h6><div class="current-chart"><canvas id="tweet-chart"></canvas></div><div class="current-chart-legend"></div>');
     }
     return buf.join("");
 };

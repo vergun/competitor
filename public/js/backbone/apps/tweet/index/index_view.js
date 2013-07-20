@@ -87,26 +87,28 @@
       };
 
       HeaderNav.prototype.ui = {
-        chartTypes: ".chart-types"
+        type: '.chart-types'
       };
 
       HeaderNav.prototype.charts = function(e) {
-        this.ui.chartTypes.each(function() {
+        this.ui.type.each(function() {
           return $(this).parent().removeClass('active');
         });
-        return $(e.currentTarget).parent().addClass('active');
+        $(e.currentTarget).parent().addClass('active');
+        return this.updateChart();
+      };
+
+      HeaderNav.prototype.updateChart = function() {
+        var options;
+        options = {
+          type: this.ui.type.parent('.active').data('chart')
+        };
+        return this.trigger("update:chart", options);
       };
 
       HeaderNav.prototype.keywords = function(e) {
         e = $(e.currentTarget);
         return e.toggleClass('active');
-      };
-
-      HeaderNav.prototype.updateCharts = function(e) {
-        var chart, model;
-        chart = $('.chart-types').parent('.active').data('chart');
-        model = this.model;
-        return App.vent.trigger("update:charts", chart, model);
       };
 
       return HeaderNav;
@@ -144,8 +146,6 @@
     /* tweet list*/
 
     Index.TweetList = (function(_super) {
-      var _this = this;
-
       __extends(TweetList, _super);
 
       function TweetList() {
@@ -156,33 +156,14 @@
       TweetList.prototype.template = templatizer.tweet.tweetlist;
 
       TweetList.prototype.ui = {
-        chart: "#myChart",
         updateChart: ".update-chart",
         updateKeyword: ".update-keyword",
         submitDateRange: "#submit-date-range"
       };
 
-      TweetList.prototype.onRender = function() {};
-
-      TweetList.prototype.addOrUpdateChart = function(chart, model, view) {
-        var ctx, data;
-        chart = typeof chart !== "undefined" ? chart : this.model.get('chart');
-        data = typeof model !== "undefined" ? model.get('chartData') : this.model.get('chartData');
-        data = chart === "Bar" || chart === "Line" || chart === "Radar" ? data.datasets : data;
-        console.log(this.ui.chart);
-        ctx = this.ui.chart.get(0).getContext('2d');
-        return new window.Chart(ctx)[chart](data, {
-          animation: true
-        });
-      };
-
-      App.vent.on("update:charts", function(chart, model) {
-        return TweetList.prototype.addOrUpdateChart(chart, model);
-      });
-
       return TweetList;
 
-    }).call(this, App.Views.ItemView);
+    })(App.Views.ItemView);
     /* main graph area*/
 
     Index.Right = (function(_super) {
@@ -207,6 +188,43 @@
       }
 
       Chart.prototype.template = templatizer.tweet.chart;
+
+      Chart.prototype.ui = {
+        type: '.update-chart',
+        context: '#tweet-chart'
+      };
+
+      Chart.prototype.onShow = function() {
+        return this.addOrUpdateChart({
+          model: this.model
+        });
+      };
+
+      Chart.prototype.addOrUpdateChart = function(options) {
+        $.extend(options, {
+          chart: this.model.get('chart'),
+          data: this.model.get('chartData')
+        });
+        options.data = this.validate(options.data, options.chart);
+        return this.showChart(this.ui.context.get(0).getContext('2d'), options.chart, options.data);
+      };
+
+      Chart.prototype.validate = function(data, chart) {
+        if (_.indexOf(["Bar", "Line", "Radar"], chart) !== -1) {
+          data = data.chartData;
+        }
+        console.log("Data:");
+        console.log(data);
+        return data;
+      };
+
+      Chart.prototype.showChart = function(context, chart, data, options) {
+        options || (options = {});
+        $.extend(options, {
+          animation: true
+        });
+        return new window.Chart(context)[chart](data, options);
+      };
 
       return Chart;
 

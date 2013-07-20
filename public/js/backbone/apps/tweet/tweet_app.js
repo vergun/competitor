@@ -6,10 +6,16 @@
     API = {
       showIndex: function() {
         return TweetApp.Index.Controller.showIndex();
+      },
+      showChart: function(options) {
+        return TweetApp.Index.Controller.showChart(options.model);
       }
     };
-    return TweetApp.on("start", function() {
+    TweetApp.on("start", function() {
       return API.showIndex();
+    });
+    return App.vent.on("update:chart", function(options) {
+      return API.showChart(options);
     });
   });
 

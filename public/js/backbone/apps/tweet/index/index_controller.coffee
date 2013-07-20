@@ -28,14 +28,17 @@
     ############## 
     showHeader: (tweets) ->
       @headerView = @getHeaderView tweets
-      
-      @headerView.on "update:chart", (args) ->
-        console.log args.model
-        
       @layout.headerRegion.show @headerView
       
     showHeaderNav: (tweets) ->
       @headernavView = @getHeaderNavView tweets
+      
+      @headernavView.on "update:chart", (options) ->
+        @model.set('chart', options.type)
+        $.extend options, { model: @model }
+        App.vent.trigger "update:chart", 
+          options
+
       @layout.headerNavRegion.show @headernavView
       
     getHeaderView: (tweets) ->
@@ -69,11 +72,11 @@
     ###  right side  ###
     ####################
     showChart: (tweets) ->
+      console.log tweets
       @chartView = @getChartView
       @layout.chartRegion.show @chartView tweets
       
     showChartLegend: (data) ->
-      console.log data
       @chartLegendView = @getChartLegendView data
       @layout.chartLegendRegion.show @chartLegendView
       
