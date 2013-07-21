@@ -1,2 +1,5 @@
 #creates an exception for .coffee files
 *.coffee
+#creates exception for templatizer
+public/js/backbone/templates.js
+

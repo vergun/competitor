@@ -15,7 +15,7 @@ exports.search = function(twit, keywords, user) {
   _(keywords).each(function(word) {
     
       twit.search(word, {count: 100, result_type: 'recent', include_entities: false}, function(err, data) {        
-        if (err) console.log("couldn't find!!!!!!! " + word)
+        if (err) console.warn("Couldn't find: " + word)
         if (data) {
           data.statuses.forEach(function(tweet) {
             Tweet.findOne({id: tweet.id}, function(err, tw) {

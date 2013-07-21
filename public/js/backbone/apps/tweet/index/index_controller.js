@@ -5,20 +5,46 @@
       showIndex: function() {
         var tweets,
           _this = this;
-        tweets = App.request("get:index:tweets");
+        tweets = this.getTweets();
         this.layout = this.getIndexLayout();
         tweets.fetch().done(function() {
           return App.mainRegion.show(_this.layout);
         });
         return this.layout.on("show", function() {
           tweets = tweets.models[0];
+          tweets.set('activeKeywords', tweets.get('keywords'));
           _this.showHeader(tweets);
           _this.showHeaderNav(tweets);
           _this.showLeftNav(tweets);
           _this.showTweetList(tweets);
           _this.showChart(tweets);
-          return _this.showChartLegend(tweets);
+          _this.showChartLegend(tweets);
+          _this.showMap(tweets);
+          return _this.showSource(tweets);
         });
+      },
+      updateIndex: function(options) {
+        var tweets,
+          _this = this;
+        if (options == null) {
+          options = {};
+        }
+        tweets = this.getTweets(options);
+        return tweets.fetch().done(function() {
+          tweets = tweets.models[0];
+          tweets.set('activeKeywords', tweets.get('keywords'));
+          _this.showHeader(tweets);
+          _this.showTweetList(tweets);
+          _this.showChart(tweets);
+          _this.showChartLegend(tweets);
+          return App.vent.trigger("remove:loading");
+        });
+      },
+      getTweets: function(options) {
+        if (options == null) {
+          options = {};
+        }
+        return App.request("get:index:tweets", options);
       },
       /* layout*/
 
@@ -40,7 +66,24 @@
           });
           return App.vent.trigger("update:chart", options);
         });
+        this.headernavView.on("update:keywords", function(options) {
+          $.extend(options, {
+            model: this.model
+          });
+          this.model.set('activeKeywords', options.data);
+          return App.vent.trigger("update:chart", options);
+        });
         return this.layout.headerNavRegion.show(this.headernavView);
+      },
+      showLoading: function() {
+        this.loadingView = this.getLoadingView();
+        return this.layout.loadingRegion.show(this.loadingView);
+      },
+      getLoadingView: function() {
+        return new Index.Loading;
+      },
+      removeLoading: function() {
+        return this.layout.loadingRegion.close();
       },
       getHeaderView: function(tweets) {
         return new Index.Header({
@@ -77,9 +120,8 @@
       /*  right side*/
 
       showChart: function(tweets) {
-        console.log(tweets);
-        this.chartView = this.getChartView;
-        return this.layout.chartRegion.show(this.chartView(tweets));
+        this.chartView = this.getChartView(tweets);
+        return this.layout.chartRegion.show(this.chartView);
       },
       showChartLegend: function(data) {
         this.chartLegendView = this.getChartLegendView(data);
@@ -92,6 +134,24 @@
       },
       getChartLegendView: function(data) {
         return new Index.ChartLegend({
+          model: data
+        });
+      },
+      showMap: function(tweets) {
+        this.mapView = this.getMapView(tweets);
+        return this.layout.mapRegion.show(this.mapView);
+      },
+      showSource: function(tweets) {
+        this.sourceView = this.getSourceView(tweets);
+        return this.layout.sourceRegion.show(this.sourceView);
+      },
+      getMapView: function(data) {
+        return new Index.Map({
+          model: data
+        });
+      },
+      getSourceView: function(data) {
+        return new Index.Source({
           model: data
         });
       }

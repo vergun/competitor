@@ -6,7 +6,7 @@
   this.Competitor.module("TweetApp.Index", function(Index, App, backbone, Marionette, $, _) {
     /* Layout*/
 
-    var _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+    var _ref, _ref1, _ref10, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
     Index.Layout = (function(_super) {
       __extends(Layout, _super);
 
@@ -19,6 +19,7 @@
 
       Layout.prototype.regions = {
         headerRegion: "#tweetApp-header",
+        loadingRegion: "#tweetApp-loading",
         headerNavRegion: "#tweetApp-headerNav",
         sideNavRegion: "#tweetApp-sideNav",
         tweestListRegion: "#tweetApp-list",
@@ -71,23 +72,51 @@
       return Header;
 
     })(App.Views.ItemView);
+    Index.Loading = (function(_super) {
+      __extends(Loading, _super);
+
+      function Loading() {
+        _ref2 = Loading.__super__.constructor.apply(this, arguments);
+        return _ref2;
+      }
+
+      Loading.prototype.template = templatizer.tweet.includes._loading;
+
+      Loading.prototype.className = "row";
+
+      return Loading;
+
+    })(App.Views.ItemView);
     Index.HeaderNav = (function(_super) {
       __extends(HeaderNav, _super);
 
       function HeaderNav() {
-        _ref2 = HeaderNav.__super__.constructor.apply(this, arguments);
-        return _ref2;
+        _ref3 = HeaderNav.__super__.constructor.apply(this, arguments);
+        return _ref3;
       }
 
       HeaderNav.prototype.template = templatizer.tweet.headernav;
 
       HeaderNav.prototype.events = {
         "click .update-chart": "charts",
-        "click .update-keyword": "keywords"
+        "click .update-keyword": "keywords",
+        "click #submit-date-range": "submitDateRange"
       };
 
       HeaderNav.prototype.ui = {
-        type: '.chart-types'
+        type: ".chart-types",
+        keywords: ".update-keyword",
+        closeModal: ".close-reveal-modal",
+        from: "#from",
+        to: "#to"
+      };
+
+      HeaderNav.prototype.onShow = function() {
+        return this.datepicker();
+      };
+
+      HeaderNav.prototype.maxDate = function() {
+        return new Date();
       };
 
       HeaderNav.prototype.charts = function(e) {
@@ -108,7 +137,62 @@
 
       HeaderNav.prototype.keywords = function(e) {
         e = $(e.currentTarget);
-        return e.toggleClass('active');
+        e.toggleClass('active');
+        return this.dispatchKeywords();
+      };
+
+      HeaderNav.prototype.dispatchKeywords = function() {
+        var data;
+        data = _.map(this.ui.keywords.filter('.active'), function(el) {
+          return $(el).data('keyword');
+        });
+        return this.trigger("update:keywords", {
+          data: data
+        });
+      };
+
+      HeaderNav.prototype.datepicker = function() {
+        var _this = this;
+        this.ui.from.datepicker({
+          dateFormat: "yy-mm-dd",
+          defaultDate: "+1w",
+          changeMonth: true,
+          numberOfMonths: 1,
+          maxDate: this.maxDate(),
+          onClose: function(selectedDate) {
+            return _this.ui.to.datepicker("option", "minDate", selectedDate);
+          }
+        });
+        return this.ui.to.datepicker({
+          dateFormat: "yy-mm-dd",
+          defaultDate: "+1w",
+          changeMonth: true,
+          numberOfMonths: 1,
+          maxDate: this.maxDate(),
+          onClose: function(selectedDate) {
+            return _this.ui.from.datepicker("option", "maxDate", selectedDate);
+          }
+        });
+      };
+
+      HeaderNav.prototype.submitDateRange = function() {
+        this.setDates();
+        App.vent.trigger("show:loading");
+        App.vent.trigger("update:tweets", {
+          chart: this.model.get("chart"),
+          dates: this.model.get("dates"),
+          keywords: this.model.get("keywords").join(";")
+        });
+        return this.ui.closeModal.click();
+      };
+
+      HeaderNav.prototype.setDates = function() {
+        var dates;
+        dates = this.ui.from.val() + "." + this.ui.to.val();
+        if (dates.length <= 1) {
+          dates = "";
+        }
+        return this.model.set("dates", dates);
       };
 
       return HeaderNav;
@@ -120,8 +204,8 @@
       __extends(LeftNav, _super);
 
       function LeftNav() {
-        _ref3 = LeftNav.__super__.constructor.apply(this, arguments);
-        return _ref3;
+        _ref4 = LeftNav.__super__.constructor.apply(this, arguments);
+        return _ref4;
       }
 
       LeftNav.prototype.template = templatizer.tweet.sidenav;
@@ -132,7 +216,7 @@
 
       LeftNav.prototype.switchApps = function(e) {
         e = $(e.currentTarget);
-        if (!e.parent().hasClass('active')) {
+        if (!e.parent().hasClass(' c')) {
           $.each(e.parent().parent().children(), function(i, el) {
             return $(el).removeClass('active');
           });
@@ -149,8 +233,8 @@
       __extends(TweetList, _super);
 
       function TweetList() {
-        _ref4 = TweetList.__super__.constructor.apply(this, arguments);
-        return _ref4;
+        _ref5 = TweetList.__super__.constructor.apply(this, arguments);
+        return _ref5;
       }
 
       TweetList.prototype.template = templatizer.tweet.tweetlist;
@@ -170,8 +254,8 @@
       __extends(Right, _super);
 
       function Right() {
-        _ref5 = Right.__super__.constructor.apply(this, arguments);
-        return _ref5;
+        _ref6 = Right.__super__.constructor.apply(this, arguments);
+        return _ref6;
       }
 
       Right.prototype.template = templatizer.tweet.right;
@@ -183,8 +267,8 @@
       __extends(Chart, _super);
 
       function Chart() {
-        _ref6 = Chart.__super__.constructor.apply(this, arguments);
-        return _ref6;
+        _ref7 = Chart.__super__.constructor.apply(this, arguments);
+        return _ref7;
       }
 
       Chart.prototype.template = templatizer.tweet.chart;
@@ -195,31 +279,61 @@
       };
 
       Chart.prototype.onShow = function() {
-        return this.addOrUpdateChart({
-          model: this.model
-        });
+        return this.addOrUpdateChart();
       };
 
       Chart.prototype.addOrUpdateChart = function(options) {
+        var data;
+        if (options == null) {
+          options = {};
+        }
+        data = this.filterChart(this.model);
+        data = this.filterKeywords(data, this.model.get('activeKeywords'));
         $.extend(options, {
-          chart: this.model.get('chart'),
-          data: this.model.get('chartData')
+          data: data,
+          chart: this.model.get('chart')
         });
-        options.data = this.validate(options.data, options.chart);
-        return this.showChart(this.ui.context.get(0).getContext('2d'), options.chart, options.data);
+        return this.showChart(this.ui.context.get(0).getContext('2d'), options.data, options.chart);
       };
 
-      Chart.prototype.validate = function(data, chart) {
-        if (_.indexOf(["Bar", "Line", "Radar"], chart) !== -1) {
-          data = data.chartData;
-        }
-        console.log("Data:");
-        console.log(data);
+      Chart.prototype.filterChart = function(model, chart) {
+        var data;
+        data = this.easyChart() ? model.get('chartData') : model.get('complex');
         return data;
       };
 
-      Chart.prototype.showChart = function(context, chart, data, options) {
-        options || (options = {});
+      Chart.prototype.filterKeywords = function(data, activeKeywords) {
+        var tempdata;
+        tempdata = this.getTempData(data, activeKeywords);
+        if (this.easyChart()) {
+          data = tempdata;
+        } else {
+          data.datasets = tempdata;
+        }
+        return data;
+      };
+
+      Chart.prototype.getTempData = function(data, activeKeywords) {
+        var tempdata;
+        tempdata = this.easyChart() ? data : data.datasets;
+        tempdata = _.compact(_.map(tempdata, function(set) {
+          if (_.indexOf(activeKeywords, set.keyword) !== -1) {
+            return set;
+          }
+        }));
+        return tempdata;
+      };
+
+      Chart.prototype.easyChart = function() {
+        var result;
+        result = (_.indexOf(["Bar", "Line", "Radar"], this.model.get('chart'))) === -1 ? true : false;
+        return result;
+      };
+
+      Chart.prototype.showChart = function(context, data, chart, options) {
+        if (options == null) {
+          options = {};
+        }
         $.extend(options, {
           animation: true
         });
@@ -233,8 +347,8 @@
       __extends(ChartLegend, _super);
 
       function ChartLegend() {
-        _ref7 = ChartLegend.__super__.constructor.apply(this, arguments);
-        return _ref7;
+        _ref8 = ChartLegend.__super__.constructor.apply(this, arguments);
+        return _ref8;
       }
 
       ChartLegend.prototype.template = templatizer.tweet.chartlegend;
@@ -246,8 +360,8 @@
       __extends(Map, _super);
 
       function Map() {
-        _ref8 = Map.__super__.constructor.apply(this, arguments);
-        return _ref8;
+        _ref9 = Map.__super__.constructor.apply(this, arguments);
+        return _ref9;
       }
 
       Map.prototype.template = templatizer.tweet.map;
@@ -259,8 +373,8 @@
       __extends(Source, _super);
 
       function Source() {
-        _ref9 = Source.__super__.constructor.apply(this, arguments);
-        return _ref9;
+        _ref10 = Source.__super__.constructor.apply(this, arguments);
+        return _ref10;
       }
 
       Source.prototype.template = templatizer.tweet.source;

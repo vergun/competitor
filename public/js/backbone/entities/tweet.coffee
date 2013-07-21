@@ -4,12 +4,39 @@
     
     
   class Entities.TweetCollection extends Entities.Collection
-    model: Entities.Tweet
-    url: '/tweets/chart/date=&chart=Pie&keywords=baroque;_hello;_goodbye&since=&context=totals/'    
+    initialize: (options) ->
+      console.log options
+      @options = options
+      @urlRoot = "/tweets/chart/"
+      @baseURL = "date=&chart=Pie&keywords=baroque;_hello;_goodbye&since=&context=totals/"
+      @model = Entities.Tweet
+      
+    url: ->
+      if @options.length?
+        @urlRoot + $.params(options)
+      else
+        @urlRoot + @baseURL
+        
+      # initialize: (options) ->
+        # @options ?= options
+    
+  
+  
+      # urlRoot: "/tweets/chart/"
+
+ 
+        # if @options.length? 
+        #   @urlRoot + $.param(options) 
+        # else 
+        # @urlRoot + "date=&chart=Pie&keywords=baroque;_hello;_goodbye&since=&context=totals/"
   
   API =
-    getTweets: ->
-      new Entities.TweetCollection
+    getTweets: (options = {}) ->
+      new Entities.TweetCollection options
 
-  App.reqres.setHandler "get:index:tweets", ->
-    API.getTweets()
+  App.reqres.setHandler "get:index:tweets", (options = {}) ->
+    API.getTweets options
+    
+
+
+  

@@ -3,22 +3,41 @@
   Index.Controller =
     
     showIndex: ->
-      tweets = App.request "get:index:tweets"
+      tweets = @getTweets()
       
       @layout = @getIndexLayout()
       
       tweets.fetch().done =>
-        App.mainRegion.show @layout
+        App.mainRegion.show @layout        
         
       @layout.on "show", =>
         tweets = tweets.models[0] #todo move to entities
+        tweets.set 'activeKeywords', tweets.get('keywords') #todo move someplace else
         @showHeader tweets
         @showHeaderNav tweets
         @showLeftNav tweets
         @showTweetList tweets
         @showChart tweets
         @showChartLegend tweets
-      
+        @showMap tweets
+        @showSource tweets
+        
+    updateIndex: (options = {}) ->
+      tweets = @getTweets( options )
+      tweets.fetch().done =>
+        tweets = tweets.models[0] #todo move to entities
+        tweets.set 'activeKeywords', tweets.get('keywords') #todo move someplace else
+        @showHeader tweets
+        @showTweetList tweets
+        @showChart tweets
+        @showChartLegend tweets
+        
+        
+        App.vent.trigger "remove:loading"
+                
+    getTweets: (options = {}) ->
+      App.request "get:index:tweets", options
+        
     ### layout ###
     ############## 
     getIndexLayout: ->
@@ -38,8 +57,24 @@
         $.extend options, { model: @model }
         App.vent.trigger "update:chart", 
           options
+          
+      @headernavView.on "update:keywords", (options) ->
+        $.extend options, { model: @model}
+        @model.set 'activeKeywords', options.data
+        App.vent.trigger "update:chart",
+          options
 
       @layout.headerNavRegion.show @headernavView
+      
+    showLoading: ->
+      @loadingView = @getLoadingView()
+      @layout.loadingRegion.show @loadingView
+      
+    getLoadingView: ->
+      new Index.Loading
+      
+    removeLoading: ->
+      @layout.loadingRegion.close()
       
     getHeaderView: (tweets) ->
       new Index.Header
@@ -72,9 +107,8 @@
     ###  right side  ###
     ####################
     showChart: (tweets) ->
-      console.log tweets
-      @chartView = @getChartView
-      @layout.chartRegion.show @chartView tweets
+      @chartView = @getChartView tweets
+      @layout.chartRegion.show @chartView
       
     showChartLegend: (data) ->
       @chartLegendView = @getChartLegendView data
@@ -86,4 +120,20 @@
         
     getChartLegendView: (data) ->
       new Index.ChartLegend
+        model: data
+        
+    showMap: (tweets) ->
+      @mapView = @getMapView tweets
+      @layout.mapRegion.show @mapView
+      
+    showSource: (tweets) ->
+      @sourceView = @getSourceView tweets
+      @layout.sourceRegion.show @sourceView
+      
+    getMapView: (data) ->
+      new Index.Map
+        model: data
+        
+    getSourceView: (data) ->
+      new Index.Source
         model: data

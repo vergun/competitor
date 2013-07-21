@@ -89,7 +89,7 @@ exports.tweet.header = function anonymous(locals) {
 exports.tweet.headernav = function anonymous(locals) {
     var buf = [];
     with (locals || {}) {
-        buf.push('<div class="row"><dl class="sub-nav"><dt>Tracking keywords:</dt>');
+        buf.push('<div id="date-modal" class="reveal-modal"><h4>Date range</h4><h4 class="subheader">Select a start and end date</h4><div class="date-range"><label for="from">From</label><input id="from" type="text" name="from"/><label for="to">to</label><input id="to" type="text" name="to"/><button id="submit-date-range">Go</button></div><a class="close-reveal-modal">&#215;</a></div><div id="remove-date-modal" class="reveal-modal"><h2>Remove date filter</h2><h6 class="subheader">This will reset your tweets to today\'s tweets.</h6><a class="close-reveal-modal">&#215;<a class="close-reveal-modal">&#215;</a></a><div class="row"><a href="#" id="cancel-remove-date-filter" class="button secondary pretty">Cancel</a><a href="#" id="remove-date-filter" class="button pretty">Remove</a></div></div><div class="row"><dl class="sub-nav"><dt>Tracking keywords:</dt>');
         (function() {
             var $$obj = keywords;
             if ("number" == typeof $$obj.length) {
@@ -127,6 +127,15 @@ exports.tweet.headernav = function anonymous(locals) {
 exports.tweet.includes._language = function anonymous(locals) {
     var buf = [];
     with (locals || {}) {}
+    return buf.join("");
+};
+
+// _loading.jade compiled template
+exports.tweet.includes._loading = function anonymous(locals) {
+    var buf = [];
+    with (locals || {}) {
+        buf.push('<div data-alert="data-alert" class="alert-box">Loading new data.<a href="#" class="close">&times;</a></div>');
+    }
     return buf.join("");
 };
 
@@ -198,7 +207,7 @@ exports.tweet.includes._tweets_empty = function anonymous(locals) {
 exports.tweet.layout = function anonymous(locals) {
     var buf = [];
     with (locals || {}) {
-        buf.push('<div id="tweetApp-header"></div><div id="tweetApp-headerNav"></div><div class="row"><div id="tweetApp-sideNav" class="small-1 columns"></div><div id="tweetApp-list" class="small-7 columns"></div><div class="small-4 columns"><div data-section="tabs" class="section-container tabs"><section><p data-section-title="data-section-title" class="title"><a href="#panel1">Graph</a></p><div data-section-content="data-section-content" class="content"><div id="tweetApp-chart"></div><div id="tweetApp-chartLegend"></div></div></section><section><p data-section-title="data-section-title" class="title"><a href="#panel2">Map</a></p><div data-section-content="data-section-content" class="content"><div id="tweetApp-map"></div></div></section><section><p data-section-title="data-section-title" class="title"><a href="#panel2">Source</a></p><div data-section-content="data-section-content" class="content"><div id="tweetApp-source"></div></div></section></div></div></div><div class="row"><div id="tweetApp-footer"></div></div>');
+        buf.push('<div id="tweetApp-header"></div><div id="tweetApp-loading"></div><div id="tweetApp-headerNav"></div><div class="row"><div id="tweetApp-sideNav" class="small-1 columns"></div><div id="tweetApp-list" class="small-7 columns"></div><div class="small-4 columns"><div data-section="tabs" class="section-container tabs"><section><p data-section-title="data-section-title" class="title"><a href="#panel1">Graph</a></p><div data-section-content="data-section-content" class="content"><div id="tweetApp-chart"></div><div id="tweetApp-chartLegend"></div></div></section><section><p data-section-title="data-section-title" class="title"><a href="#panel2">Map</a></p><div data-section-content="data-section-content" class="content"><div id="tweetApp-map"></div></div></section><section><p data-section-title="data-section-title" class="title"><a href="#panel2">Source</a></p><div data-section-content="data-section-content" class="content"><div id="tweetApp-source"></div></div></section></div></div></div><div class="row"><div id="tweetApp-footer"></div></div>');
     }
     return buf.join("");
 };
@@ -213,7 +222,7 @@ exports.tweet.map = function anonymous(locals) {
             if ("number" == typeof $$obj.length) {
                 for (var $index = 0, $$l = $$obj.length; $index < $$l; $index++) {
                     var val = $$obj[$index];
-                    buf.push("<tr><td>" + jade.escape(null == (jade.interp = val[0]) ? "" : jade.interp) + "</td><td>" + jade.escape(null == (jade.interp = val[1]) ? "" : jade.interp) + "</td><td>" + jade.escape(null == (jade.interp = Math.round(val[1] / tweets.length * 100).toString() + "%") ? "" : jade.interp) + "</td></tr>");
+                    buf.push("<tr><td>" + jade.escape(null == (jade.interp = val[0]) ? "" : jade.interp) + "</td><td>" + jade.escape(null == (jade.interp = val[1]) ? "" : jade.interp) + '</td><!-- td= (Math.round((val[1]/tweets.length)*100)).toString() + "%"--></tr>');
                 }
             } else {
                 var $$l = 0;
@@ -221,7 +230,7 @@ exports.tweet.map = function anonymous(locals) {
                     $$l++;
                     if ($$obj.hasOwnProperty($index)) {
                         var val = $$obj[$index];
-                        buf.push("<tr><td>" + jade.escape(null == (jade.interp = val[0]) ? "" : jade.interp) + "</td><td>" + jade.escape(null == (jade.interp = val[1]) ? "" : jade.interp) + "</td><td>" + jade.escape(null == (jade.interp = Math.round(val[1] / tweets.length * 100).toString() + "%") ? "" : jade.interp) + "</td></tr>");
+                        buf.push("<tr><td>" + jade.escape(null == (jade.interp = val[0]) ? "" : jade.interp) + "</td><td>" + jade.escape(null == (jade.interp = val[1]) ? "" : jade.interp) + '</td><!-- td= (Math.round((val[1]/tweets.length)*100)).toString() + "%"--></tr>');
                     }
                 }
             }
@@ -256,7 +265,7 @@ exports.tweet.source = function anonymous(locals) {
                     } else {
                         buf.push("<td></td>");
                     }
-                    buf.push("<td>" + jade.escape(null == (jade.interp = val[1]) ? "" : jade.interp) + "</td><td>" + jade.escape(null == (jade.interp = Math.round(val[1] / tweets.length * 100).toString() + "%") ? "" : jade.interp) + "</td></tr>");
+                    buf.push("<td>" + jade.escape(null == (jade.interp = val[1]) ? "" : jade.interp) + '</td><!-- td= (Math.round((val[1]/tweets.length)*100)).toString() + "%"--></tr>');
                 }
             } else {
                 var $$l = 0;
@@ -270,7 +279,7 @@ exports.tweet.source = function anonymous(locals) {
                         } else {
                             buf.push("<td></td>");
                         }
-                        buf.push("<td>" + jade.escape(null == (jade.interp = val[1]) ? "" : jade.interp) + "</td><td>" + jade.escape(null == (jade.interp = Math.round(val[1] / tweets.length * 100).toString() + "%") ? "" : jade.interp) + "</td></tr>");
+                        buf.push("<td>" + jade.escape(null == (jade.interp = val[1]) ? "" : jade.interp) + '</td><!-- td= (Math.round((val[1]/tweets.length)*100)).toString() + "%"--></tr>');
                     }
                 }
             }

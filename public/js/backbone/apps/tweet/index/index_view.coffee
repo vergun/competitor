@@ -7,6 +7,7 @@
     
     regions:
       headerRegion: "#tweetApp-header"
+      loadingRegion: "#tweetApp-loading"
       headerNavRegion: "#tweetApp-headerNav"
       sideNavRegion: "#tweetApp-sideNav"
       tweestListRegion: "#tweetApp-list"
@@ -24,7 +25,7 @@
     ui:
       tweetsTotal: "#tweets-total"
 
-    templateHelpers:
+    templateHelpers: ## todo move this logic to controller is this is htat
       tweetsCount: ->
         total = 0
         if this.chart is "Bar" or this.chart is "Line" or this.chart is "Radar"
@@ -38,13 +39,29 @@
     modelEvents:
       "change" : "render"
       
+  class Index.Loading extends App.Views.ItemView
+    template: templatizer.tweet.includes._loading
+    className: "row"
+      
   class Index.HeaderNav extends App.Views.ItemView
     template: templatizer.tweet.headernav
     events:
       "click .update-chart" : "charts"
       "click .update-keyword" : "keywords"
+      "click #submit-date-range" : "submitDateRange"
+      
     ui:
-      type: '.chart-types'
+      type: ".chart-types"
+      keywords: ".update-keyword"
+      closeModal: ".close-reveal-modal"
+      from: "#from"
+      to: "#to"
+
+    onShow: ->
+      @datepicker()
+  
+    maxDate: ->
+      new Date()
       
     charts: (e) ->
       @ui.type.each ->
@@ -60,6 +77,47 @@
     keywords: (e) ->
       e = $(e.currentTarget)
       e.toggleClass('active')
+      @dispatchKeywords()
+    
+    dispatchKeywords: ->
+      data = _.map @ui.keywords.filter('.active'), (el) -> 
+        $(el).data('keyword')
+      @trigger "update:keywords", 
+        data: data  
+        
+    datepicker: ->
+      @ui.from.datepicker
+        dateFormat: "yy-mm-dd"
+        defaultDate: "+1w"
+        changeMonth: true
+        numberOfMonths: 1
+        maxDate: @maxDate()
+        onClose: ( selectedDate ) =>
+          @ui.to.datepicker( "option", "minDate", selectedDate )
+      @ui.to.datepicker
+        dateFormat: "yy-mm-dd"
+        defaultDate: "+1w"
+        changeMonth: true
+        numberOfMonths: 1
+        maxDate: @maxDate()
+        onClose: ( selectedDate ) =>
+          @ui.from.datepicker( "option", "maxDate", selectedDate )
+          
+    submitDateRange: ->
+      @setDates()
+      
+      App.vent.trigger "show:loading"
+      App.vent.trigger "update:tweets",
+        chart: @model.get("chart")
+        dates: @model.get("dates")
+        keywords: @model.get("keywords").join(";")
+      @ui.closeModal.click()      
+      # UI.getData(e, "totals");
+      
+    setDates: ->
+      dates = @ui.from.val() + "." + @ui.to.val()
+      dates = "" if dates.length <= 1
+      @model.set "dates", dates
       
   ### left ###   
   ##############
@@ -72,7 +130,7 @@
       
     switchApps: (e) ->
       e = $(e.currentTarget)
-      if !e.parent().hasClass('active')
+      if !e.parent().hasClass(' c')
         $.each e.parent().parent().children(), (i, el) ->
           $(el).removeClass('active')
         e.parent().addClass('active')
@@ -101,21 +159,35 @@
       context: '#tweet-chart'
       
     onShow: ->
-      @addOrUpdateChart { model: @model }
+      @addOrUpdateChart()
     
-    addOrUpdateChart: (options)  ->
-      $.extend options, { chart: @model.get('chart'), data: @model.get('chartData') }
-      options.data = @validate options.data, options.chart
-      @showChart @ui.context.get(0).getContext('2d'), options.chart, options.data
+    addOrUpdateChart: (options = {})  ->
+      data = @filterChart @model
+      data = @filterKeywords( data, @model.get('activeKeywords') )
+      $.extend options, { data: data, chart: @model.get('chart') }
+      # console.log options.data
+      # console.log options.chart
+      @showChart @ui.context.get(0).getContext('2d'), options.data, options.chart
     
-    validate: (data, chart) ->
-      data = data.chartData if _.indexOf(["Bar", "Line", "Radar"], chart) isnt -1
-      console.log "Data:"
-      console.log data
+    filterChart: (model, chart) ->
+      data = if @easyChart() then model.get('chartData') else model.get('complex')
       data
-
-    showChart: (context, chart, data, options) ->
-      options or= {}
+      
+    filterKeywords: (data, activeKeywords) ->
+      tempdata = @getTempData data, activeKeywords
+      if @easyChart() then ( data = tempdata ) else ( data.datasets = tempdata )
+      data
+      
+    getTempData: (data, activeKeywords) ->
+      tempdata = if @easyChart() then data else data.datasets
+      tempdata = _.compact _.map tempdata, (set) -> return set if _.indexOf(activeKeywords, set.keyword) isnt -1
+      tempdata
+    
+    easyChart: ->
+      result = if (_.indexOf ["Bar", "Line", "Radar"], @model.get('chart')) is -1 then true else false
+      result
+      
+    showChart: (context, data, chart, options = {}) ->
       $.extend options, { animation: true }
       new window.Chart(context)[chart] data, options
     

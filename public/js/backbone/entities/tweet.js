@@ -24,20 +24,38 @@
         return _ref1;
       }
 
-      TweetCollection.prototype.model = Entities.Tweet;
+      TweetCollection.prototype.initialize = function(options) {
+        console.log(options);
+        this.options = options;
+        this.urlRoot = "/tweets/chart/";
+        this.baseURL = "date=&chart=Pie&keywords=baroque;_hello;_goodbye&since=&context=totals/";
+        return this.model = Entities.Tweet;
+      };
 
-      TweetCollection.prototype.url = '/tweets/chart/date=&chart=Pie&keywords=baroque;_hello;_goodbye&since=&context=totals/';
+      TweetCollection.prototype.url = function() {
+        if (this.options.length != null) {
+          return this.urlRoot + $.params(options);
+        } else {
+          return this.urlRoot + this.baseURL;
+        }
+      };
 
       return TweetCollection;
 
     })(Entities.Collection);
     API = {
-      getTweets: function() {
-        return new Entities.TweetCollection;
+      getTweets: function(options) {
+        if (options == null) {
+          options = {};
+        }
+        return new Entities.TweetCollection(options);
       }
     };
-    return App.reqres.setHandler("get:index:tweets", function() {
-      return API.getTweets();
+    return App.reqres.setHandler("get:index:tweets", function(options) {
+      if (options == null) {
+        options = {};
+      }
+      return API.getTweets(options);
     });
   });
 

@@ -77,7 +77,6 @@ exports.session = function (req, res) {
 exports.create = function (req, res) {
       
   var user = new User(req.body);
-  console.log(user)
   user.save(function (err, data) {
     if (err) { 
       // pass errors in // todo // 

@@ -45,6 +45,7 @@ exports.getChartData = function(req, res, next, query) {
           , arrayOfTweetsSource = _.map(_(tws).countBy('source'), function (value, key) { return [key, value] })
           , arrayOfTweetsLanguage = _.map(_(tws).countBy('lang'), function (value, key) { return [key, value] });
 
+          //todo remove this block of code
         if (_(d.simple_charts).contains(d.chart)) data = graphData;   
         if (_(d.complex_charts).contains(d.chart)) {                        
           data = { labels: [], datasets: [] };
@@ -52,6 +53,11 @@ exports.getChartData = function(req, res, next, query) {
           data.datasets = graphData;             
           }
         
+        complex = { labels: [], datasets: [] };
+        complex.labels = d.labels;
+        complex.datasets = graphData;    
+          
+        req.complex = complex;
         req.chart = d.chart;
         req.chartData = data;
         req.displayedTweets = tws.slice(0, 19);
@@ -60,7 +66,7 @@ exports.getChartData = function(req, res, next, query) {
         req.keywords = d.keywords;
         req.source = _.sortBy(arrayOfTweetsSource, function (t) { return t[1] }).reverse()
         req.lang = _.sortBy(arrayOfTweetsLanguage, function (t) { return t[1] }).reverse()
-        req.tweets = tws
+        // req.tweets = tws
            
         next()
           
@@ -114,7 +120,7 @@ exports.index = function(req, res){
 
 exports.chart = function(req, res){
   res.writeHead(200, {'content-type': 'text/json' });
-  res.write( JSON.stringify({ tweets: req.tweets, chart: req.chart, lang: req.lang, source: req.source, chartData: req.chartData, displayedTweets: req.displayedTweets, since: req.since, formattedDates: req.formattedDates, keywords: req.keywords }) );
+  res.write( JSON.stringify({ complex: req.complex, chart: req.chart, lang: req.lang, source: req.source, chartData: req.chartData, displayedTweets: req.displayedTweets, since: req.since, formattedDates: req.formattedDates, keywords: req.keywords }) );
   res.end('\n');
 }
 
