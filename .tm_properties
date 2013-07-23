@@ -1,0 +1,54 @@
+# Basic Settings
+#
+fontName       = "Source Code Pro" 
+fontSize       = 13
+tabSize        = 2
+softTabs       = true
+wrapColumn     = 80 | "Use Window Frame" # choose one
+sofWrap        = false
+showInvisibles = truei
+
+# show the path to the current tab's file in the window title 
+# (replace the 2 instances of 'username' in the string below 
+# with your mac username).
+windowTitle    = "$TM_DISPLAYNAME${TM_DIRECTORY/\A(?:\/Users\/username\w+\/?(.*)|(.+))\z/${2:? – ${2/\A\/Users\/username/~/}:${1/\A(?=.)/ – /}}/}"
+
+# Extra files to include
+#
+myExtraIncludes = ""
+fileBrowserGlob  = "{*,$myExtraIncludes}"
+include = "{$include,$myExtraIncludes}"
+
+# Hide log, vendor and tmp directories from search popups.
+# Ignore these files and folders
+#
+myExtraExcludes = "Procfile,*.{js,md,json,tm_properties,gitignore}"
+excludeInFileChooser  = "{$excludeInFileChooser,$myExtraExcludes}"
+excludeInFolderSearch = "{$excludeInFolderSearch,$myExtraExcludes}"
+excludeInBrowser      = "{$excludeInBrowser,$myExtraExcludes}"
+excludeDirectories = "node_modules"
+
+# Default editing configuration
+#
+softWrap         = false
+softTabs         = true
+tabSize          = 2
+
+# File type specific configuration
+#
+[ text ]
+showInvisibles   = true
+
+[ .git/COMMIT_EDITMSG ]
+spellChecking    = true
+spellingLanguage = 'en'
+
+[ *.{icns,ico,jpg,jpeg,m4v,nib,pdf,png,psd,pyc,rtf,tif,tiff,xib} ]
+binary           = true
+
+[ source ]
+softTabs         = true
+tabSize          = 2
+
+[ "{README,INSTALL,LICENSE,TODO}" ]
+fileType         = "text.plain"

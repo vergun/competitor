@@ -1,9 +1,0 @@
-table
-  tbody
-    each dataPoint in chartData
-      tr
-        td
-          .chartBox(style= "background-color:" + dataPoint.color + ";")
-        td= dataPoint.keyword
-        td= dataPoint.value + " tweets"
-        td= dataPoint.percentage + "%"

@@ -27,11 +27,8 @@
     "connect-flash": "latest",
     "passport": "latest",
     "passport-local": "latest",
-    "imager": "latest",
-    "notifier": "latest",
     "underscore": "latest",
     "templatizer": "latest",
-    "gzippo": "latest",
     "async": "latest",
     "view-helpers": "latest",
     "forever": "latest",
@@ -41,8 +38,7 @@
     "time": "latest",
     "mixpanel": "latest",
     "cron": "latest",
-    "coffee-script": "latest",
-    "node-sass": "latest"
+    "coffee-script": "latest"
   },
   "devDependencies": {
     "supertest": "latest",
