@@ -22,11 +22,8 @@ exports.cron = ->
       User.find {}, (err, users) ->
         _(users).each (user) ->
           tweets.search twit, user.keywords, user
-
-
-
     start: false
     timeZone: "America/Los_Angeles"
   )
 
-# tweetsFetch.start();
+  # tweetsFetch.start();

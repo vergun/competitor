@@ -1,11 +1,18 @@
 doctype 5
 html(lang='en', xmlns='http://www.w3.org/1999/xhtml', xmlns:fb='https://www.facebook.com/2008/fbml', itemscope='itemscope', itemtype='http://schema.org/Product')
 
-  link(rel="stylesheet", href="/css/foundation.css", type="text/css")
-
-
+  include ../includes/_header
   body
-  h1 Hello
+    - if (!req.isAuthenticated())
+      include ../includes/_public_nav
+    - if (req.isAuthenticated())          
+      #header-region
+      #main-region
+    .row
+      block main
+      block content
+      include ../includes/_footer
+    #footer-region
 
 
   

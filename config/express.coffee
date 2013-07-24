@@ -23,7 +23,7 @@ module.exports = (app, config, passport) ->
   app.use express.logger("dev")  if process.env.NODE_ENV isnt "test"
   
   # set views path, template engine and default layout
-  app.set "views", config.root + "/app/assets/html"
+  app.set "views", config.root + "/app/assets/jade"
   app.set "view engine", "jade"
   app.configure ->
     

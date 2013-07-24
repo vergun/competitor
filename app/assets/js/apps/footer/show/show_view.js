@@ -15,14 +15,6 @@
 
       Footer.prototype.template = templatizer.footer.footer;
 
-      Footer.prototype.initialize = function() {
-        return this.listenTo(this.model, "change", this.modelChanged);
-      };
-
-      Footer.prototype.modelChanged = function(model) {
-        return console.log(model);
-      };
-
       Footer.prototype.modelEvents = {
         "change": "render"
       };

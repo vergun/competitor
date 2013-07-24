@@ -30,7 +30,7 @@ Module dependencies.
     if (process.env.NODE_ENV !== "test") {
       app.use(express.logger("dev"));
     }
-    app.set("views", config.root + "/app/assets/html");
+    app.set("views", config.root + "/app/assets/jade");
     app.set("view engine", "jade");
     app.configure(function() {
       app.use(function(req, res, next) {

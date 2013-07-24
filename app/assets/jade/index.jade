@@ -2,4 +2,16 @@ extends layouts/default
 
 block main
 block content
+  - if (req.isAuthenticated())
+    - var keywords = user.keywords.split(',')
+    input(name='document[id]', value=JSON.stringify(chartData), type='hidden', id='chart-data')
+    input(name='document[id]', value=since, type='hidden', id='chart-since')
+    include tweets/index
+        
+  - if (!req.isAuthenticated())  
+    .row
+      .small-6.columns
+        include tweets/_frontpage
+      .small-4.small-offset-2.columns
+        include users/_signup
  

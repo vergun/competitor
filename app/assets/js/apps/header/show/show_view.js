@@ -15,14 +15,6 @@
 
       Header.prototype.template = templatizer.header.header;
 
-      Header.prototype.initialize = function() {
-        return this.listenTo(this.model, "change", this.modelChanged);
-      };
-
-      Header.prototype.modelChanged = function(model) {
-        return console.log(model);
-      };
-
       Header.prototype.modelEvents = {
         "change": "render"
       };

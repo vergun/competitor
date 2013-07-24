@@ -1,5 +1,5 @@
 #creates an exception for .coffee files
 *.coffee
 #creates exception for templatizer
-app/assets/js/templates.js
+app/assets/js/templates/templates.js
 

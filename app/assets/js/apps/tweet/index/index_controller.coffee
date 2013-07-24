@@ -1,4 +1,4 @@
-@Competitor.module "TweetApp.Index", (Index, App, Backbone, Mariontte, $, _, Chart) ->
+@Competitor.module "TweetApp.Index", (Index, App, Backbone, Mariontte, $, _) ->
   
   Index.Controller =
     
@@ -100,7 +100,6 @@
     ###  tweet list  ###
     ####################
     showTweetList: (tweets) ->
-      console.log tweets
       @tweetListView = @getTweetListView tweets
       @layout.tweestListRegion.show @tweetListView
         

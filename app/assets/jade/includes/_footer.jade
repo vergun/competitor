@@ -1,67 +1,49 @@
-// charts in-process porting to backbone
-// script(src='/js/chart-internal.js')                  
-
-
-// backbone
-
-// lib
-script(src='/js/vendor/jquery.js')
-script(src='/js/vendor/jquery-ui.js')
-script(src='/js/vendor/modernizr.js')
-script(src='/js/backbone/templates.js')
-script(src='/js/vendor/underscore.js')
-script(src='/js/vendor/backbone.js')
-script(src='/js/vendor/marionette.js')
+// dependencies
+script(src='/js/vendor/jquery/jquery.js')
+script(src='/js/vendor/jquery/jquery-ui.js')
+script(src='/js/vendor/modernizr/modernizr.js')
+script(src='/js/vendor/chart/chart.js')  
+script(src='/js/templates/templates.js')
+script(src='/js/vendor/underscore/underscore.js')
+script(src='/js/vendor/backbone/backbone.js')
+script(src='/js/vendor/backbone/backbone.marionette.js')
 script(src='/socket.io/socket.io.js')
-script(src='/js/backbone/config/marionette/application.js')
-// todo fix renderer
-// script(src='/js/backbone/config/marionette/renderer.js')
-script(src='/js/backbone/app.js')
-script(src='/js/backbone/entities/_base/collections.js')
-script(src='/js/backbone/entities/_base/collectionview.js')
-script(src='/js/backbone/entities/_base/compositeview.js')
-script(src='/js/backbone/entities/_base/itemview.js')
-script(src='/js/backbone/entities/_base/layout.js')
-script(src='/js/backbone/entities/_base/models.js')
-script(src='/js/backbone/entities/_base/view.js')
-script(src='/js/backbone/entities/header.js')
-script(src='/js/backbone/entities/footer.js')
-script(src='/js/backbone/entities/tweet.js')
-
+script(src='/js/config/marionette/application.js')
+script(src='/js/config/marionette/renderer.js')
+script(src='/js/app.js')
+script(src='/js/entities/_base/collections.js')
+script(src='/js/entities/_base/collectionview.js')
+script(src='/js/entities/_base/compositeview.js')
+script(src='/js/entities/_base/itemview.js')
+script(src='/js/entities/_base/layout.js')
+script(src='/js/entities/_base/models.js')
+script(src='/js/entities/_base/view.js')
+script(src='/js/entities/header.js')
+script(src='/js/entities/footer.js')
+script(src='/js/entities/tweet.js')
+ 
 // header app
-script(src='/js/backbone/apps/header/header_app.js')
-script(src='/js/backbone/apps/header/show/show_controller.js')
-script(src='/js/backbone/apps/header/show/show_view.js')
-
+script(src='/js/apps/header/header_app.js')
+script(src='/js/apps/header/show/show_controller.js')
+script(src='/js/apps/header/show/show_view.js')
+ 
 // footer app
-script(src='/js/backbone/apps/footer/footer_app.js')
-script(src='/js/backbone/apps/footer/show/show_controller.js')
-script(src='/js/backbone/apps/footer/show/show_view.js')
-
+script(src='/js/apps/footer/footer_app.js')
+script(src='/js/apps/footer/show/show_controller.js')
+script(src='/js/apps/footer/show/show_view.js')
+ 
 // tweet app
-script(src='/js/backbone/apps/tweet/tweet_app.js')
-script(src='/js/backbone/apps/tweet/index/index_controller.js')
-script(src='/js/backbone/apps/tweet/index/index_view.js')
-
-
-// init
-script(src='/js/backbone/init.js')
+script(src='/js/apps/tweet/tweet_app.js')
+script(src='/js/apps/tweet/index/index_controller.js')
+script(src='/js/apps/tweet/index/index_view.js')
+ 
+// app
+script(src='/js/init.js')
 
 // foundation
-script(src='js/vendor/foundation.js')
+script(src='js/vendor/foundation/foundation.js')
 script.
-  $(document).foundation();
-script(src='/js/jquery.tagsinput.min.js')
-script(src='/js/app.js')
-script(src='/js/ui.js')
-
-script.
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-25468002-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
+   $(document).foundation();
+   
+// internal javascripts
+script(src='/js/lib/ui.js')
