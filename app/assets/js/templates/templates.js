@@ -93,7 +93,7 @@ exports.tweet.header = function anonymous(locals) {
 exports.tweet.headernav = function anonymous(locals) {
     var buf = [];
     with (locals || {}) {
-        buf.push('<div id="date-modal" class="reveal-modal"><h4>Date range</h4><h4 class="subheader">Select a start and end date</h4><div class="date-range"><label for="from">From</label><input id="from" type="text" name="from"/><label for="to">to</label><input id="to" type="text" name="to"/><button id="submit-date-range">Go</button></div><a class="close-reveal-modal">&#215;</a></div><div id="remove-date-modal" class="reveal-modal"><h2>Remove date filter</h2><h6 class="subheader">This will reset your tweets to today\'s tweets.</h6><a class="close-reveal-modal">&#215;<a class="close-reveal-modal">&#215;</a></a><div class="row"><a href="#" id="cancel-remove-date-filter" class="button secondary pretty">Cancel</a><a href="#" id="remove-date-filter" class="button pretty">Remove</a></div></div><div class="row"><dl class="sub-nav"><dt>Tracking keywords:</dt>');
+        buf.push('<div class="row"><dl class="sub-nav"><dt>Tracking keywords:</dt>');
         (function() {
             var $$obj = keywords;
             if ("number" == typeof $$obj.length) {

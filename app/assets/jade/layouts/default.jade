@@ -1,17 +1,25 @@
 doctype 5
 html(lang='en', xmlns='http://www.w3.org/1999/xhtml', xmlns:fb='https://www.facebook.com/2008/fbml', itemscope='itemscope', itemtype='http://schema.org/Product')
 
-  include ../includes/_header
+  include _header
+  
   body
+  
     - if (!req.isAuthenticated())
-      include ../includes/_public_nav
-    - if (req.isAuthenticated())          
+      include _public_nav
+      
+    - if (req.isAuthenticated())
+      include ../layouts/_modals
+                
       #header-region
+      
       #main-region
+      
     .row
       block main
       block content
-      include ../includes/_footer
+      include _footer
+      
     #footer-region
 
 
